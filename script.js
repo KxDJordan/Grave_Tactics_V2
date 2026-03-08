@@ -271,6 +271,52 @@ const UNIT_SVGS = {
     <line x1="10" y1="36" x2="6" y2="38" stroke="${c}" stroke-width="1" opacity="0.5"/>
     <line x1="30" y1="36" x2="34" y2="38" stroke="${c}" stroke-width="1" opacity="0.5"/>
   </svg>`,
+
+  // VEX ORDER ────────────────────────────────────────────────
+  // Tuning fork body with resonance ellipses radiating outward
+  vex_striker: (c) => `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <line x1="20" y1="36" x2="20" y2="21" stroke="${c}" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="15" y1="21" x2="15" y2="11" stroke="${c}" stroke-width="2" stroke-linecap="round"/>
+    <line x1="25" y1="21" x2="25" y2="11" stroke="${c}" stroke-width="2" stroke-linecap="round"/>
+    <path d="M15 11 Q15 5 20 5 Q25 5 25 11" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round"/>
+    <line x1="15" y1="21" x2="25" y2="21" stroke="${c}" stroke-width="1.4"/>
+    <ellipse cx="20" cy="19" rx="9" ry="3.5" fill="none" stroke="${c}" stroke-width="0.9" opacity="0.55"/>
+    <ellipse cx="20" cy="19" rx="15" ry="5.5" fill="none" stroke="${c}" stroke-width="0.7" opacity="0.3"/>
+    <circle cx="20" cy="21" r="2.5" fill="${c}" opacity="0.95"/>
+  </svg>`,
+
+  // Conductor's baton with bilateral sound-arc waves
+  vex_cantor: (c) => `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <line x1="8" y1="33" x2="31" y2="10" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="8" cy="33" r="3.2" fill="${c}" opacity="0.8"/>
+    <circle cx="31" cy="10" r="1.8" fill="${c}"/>
+    <path d="M31 10 Q37 11 37 17" fill="none" stroke="${c}" stroke-width="1.3" opacity="0.5" stroke-linecap="round"/>
+    <path d="M31 10 Q39 14 38 22" fill="none" stroke="${c}" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <path d="M31 10 Q25 4 19 6" fill="none" stroke="${c}" stroke-width="1.3" opacity="0.5" stroke-linecap="round"/>
+    <path d="M31 10 Q23 2 15 5" fill="none" stroke="${c}" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <circle cx="20" cy="21" r="2" fill="${c}" opacity="0.65"/>
+    <circle cx="14" cy="27" r="1.4" fill="${c}" opacity="0.4"/>
+  </svg>`,
+
+  // Speaker cone with expanding wave arcs
+  vex_shattersong: (c) => `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15 14 L8 11 L8 29 L15 26 Z" fill="${c}" opacity="0.25" stroke="${c}" stroke-width="1.2"/>
+    <rect x="15" y="13" width="5" height="14" rx="1" fill="${c}" opacity="0.2" stroke="${c}" stroke-width="1.5"/>
+    <circle cx="17.5" cy="20" r="2.8" fill="${c}" opacity="0.9"/>
+    <path d="M22 16.5 Q27 20 22 23.5" fill="none" stroke="${c}" stroke-width="1.9" stroke-linecap="round"/>
+    <path d="M24.5 13.5 Q32 20 24.5 26.5" fill="none" stroke="${c}" stroke-width="1.5" stroke-linecap="round" opacity="0.65"/>
+    <path d="M27 10.5 Q37 20 27 29.5" fill="none" stroke="${c}" stroke-width="1.1" stroke-linecap="round" opacity="0.35"/>
+  </svg>`,
+
+  // Standing wave pattern + heavy resonant core
+  vex_resonant: (c) => `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 20 Q9 13 13 20 Q17 27 21 20 Q25 13 29 20 Q33 27 35 20" fill="none" stroke="${c}" stroke-width="1.6" opacity="0.55" stroke-linecap="round"/>
+    <path d="M5 16 Q9 9 13 16 Q17 23 21 16 Q25 9 29 16 Q33 23 35 16" fill="none" stroke="${c}" stroke-width="0.9" opacity="0.28" stroke-linecap="round"/>
+    <path d="M5 24 Q9 17 13 24 Q17 31 21 24 Q25 17 29 24 Q33 31 35 24" fill="none" stroke="${c}" stroke-width="0.9" opacity="0.28" stroke-linecap="round"/>
+    <circle cx="20" cy="20" r="13" fill="none" stroke="${c}" stroke-width="0.7" opacity="0.22"/>
+    <circle cx="20" cy="20" r="7.5" fill="${c}" opacity="0.14" stroke="${c}" stroke-width="2"/>
+    <circle cx="20" cy="20" r="3.8" fill="${c}" opacity="0.95"/>
+  </svg>`,
 };
 
 function getUnitSVG(unitId, color, size) {
@@ -289,6 +335,7 @@ const FACTIONS = {
   flame:  { name: 'Ignis Collective', color: '#ff5c1a', glyph: '◈', description: 'Pyroclastic shock troops who incinerate everything in their path. Devastating offense, explosive synergies.' },
   illusion: { name: 'Mirage Protocol', color: '#c940ff', glyph: '◇', description: 'Psi-soldiers who shatter perception, create decoys, and manipulate enemy minds. Impossible to pin down.' },
   undead: { name: 'Necrion Array', color: '#50ff80', glyph: '⬢', description: 'Corrupted machine-flesh hybrids. They cannot die permanently, corrupt the battlefield, and overwhelm through attrition.' },
+  vex:    { name: 'Vex Order', color: '#f5c842', glyph: '◎', description: 'Sound resonance masters who stack Resonance on targets to amplify every hit. Punishes grouped enemies and ability-heavy opponents with Silence.' },
 };
 
 const ALL_UNITS = [
@@ -303,7 +350,7 @@ const ALL_UNITS = [
     abilities: [
       { name: 'Temporal Cut', tag: 'temporal', cost: 1, range: 1, desc: 'Strike target. If it has moved this turn, deal +4 bonus damage.' },
       { name: 'Blink Strike', tag: 'chrono', cost: 2, range: 3, desc: 'Teleport to target tile and deal ATK+2 damage on arrival.' },
-      { name: 'Time Echo', tag: 'temporal', cost: 2, range: 0, desc: 'Revert this unit to its position from 1 turn ago and restore 6 HP.' },
+      { name: 'Time Echo', tag: 'temporal', cost: 2, range: 0, desc: 'Revert this unit to its position from 1 turn ago and restore 18 HP.' },
       { name: 'Paradox Slash', tag: 'melee', cost: 2, range: 1, desc: 'Attack twice. Second hit deals half damage.' },
     ],
     promotion: ['Riftblade', 'Void Lancer', 'Epoch Destroyer'],
@@ -315,7 +362,7 @@ const ALL_UNITS = [
     passive: { name: 'Temporal Field', desc: 'Adjacent allies gain +1 AP at the start of each turn (once per battle per unit).' },
     abilities: [
       { name: 'Portal Throw', tag: 'chrono', cost: 1, range: 4, desc: 'Open a micro-portal at target tile. Any ally can teleport there for 0 AP this turn.' },
-      { name: 'Rewind', tag: 'temporal', cost: 2, range: 2, desc: 'Restore 10 HP to an ally and remove 1 negative status effect.' },
+      { name: 'Rewind', tag: 'temporal', cost: 2, range: 2, desc: 'Restore 22 HP to an ally and remove all negative status effects.' },
       { name: 'Time Stop', tag: 'temporal', cost: 2, range: 3, desc: 'Stun a single enemy for 2 turns. They cannot move or act.' },
       { name: 'Causality Bomb', tag: 'chrono', cost: 2, range: 3, desc: 'Delay-blast: place a chrono mine. Explodes next turn for ATK+3 in 1-tile radius.' },
     ],
@@ -358,7 +405,7 @@ const ALL_UNITS = [
     passive: { name: 'Combust', desc: 'After taking damage, deal 2 fire damage back to attacker if adjacent.' },
     abilities: [
       { name: 'Flame Strike', tag: 'inferno', cost: 1, range: 1, desc: 'Deal ATK damage. Apply Burn: 2 dmg/turn for 3 turns.' },
-      { name: 'Ignition Charge', tag: 'flame', cost: 2, range: 3, desc: 'Dash forward, burning every tile passed. Enemies on those tiles take 3 damage.' },
+      { name: 'Ignition Charge', tag: 'flame', cost: 2, range: 3, desc: 'Dash forward, burning every tile passed. Enemies on those tiles take 7 damage.' },
       { name: 'Scorch Nova', tag: 'inferno', cost: 2, range: 0, desc: 'Blast in all directions. Deal ATK damage to all adjacent units (ally or enemy).' },
       { name: 'Meltdown', tag: 'flame', cost: 2, range: 1, desc: 'Deal ATK+3 damage. If target is Burning, deal double and clear the burn.' },
     ],
@@ -383,7 +430,7 @@ const ALL_UNITS = [
     stats: { hp: 72, atk: 30, def: 14, mov: 4, sight: 2 },
     passive: { name: 'Incendiary Trail', desc: 'Leaves burning ground on every tile moved through. Enemies entering those tiles take 2 damage.' },
     abilities: [
-      { name: 'Fire Dash', tag: 'flame', cost: 1, range: 3, desc: 'Move up to 3 tiles in a straight line, dealing 3 damage to any enemy in the path.' },
+      { name: 'Fire Dash', tag: 'flame', cost: 1, range: 3, desc: 'Move up to 3 tiles in a straight line, dealing 7 damage to any enemy in the path.' },
       { name: 'Napalm Grenade', tag: 'explosive', cost: 2, range: 3, desc: 'Lob a grenade. 2-tile blast, ATK damage, creates burning zone for 2 turns.' },
       { name: 'Fuel Inject', tag: 'explosive', cost: 1, range: 0, desc: 'Gain +2 MOV and +1 ATK for 2 turns. Take 3 self-damage.' },
       { name: 'Detonation Protocol', tag: 'explosive', cost: 2, range: 1, desc: 'Self-destruct near an enemy — deal ATK×2 to all adjacent units. Unit survives with 1 HP.' },
@@ -429,7 +476,7 @@ const ALL_UNITS = [
       { name: 'Veil Shroud', tag: 'illusion', cost: 1, range: 2, desc: 'Grant an ally 2 turns of full invisibility and +1 sight.' },
       { name: 'Hallucinate', tag: 'psi', cost: 2, range: 3, desc: 'Target enemy wastes their next action attacking a hallucination (0 damage dealt to anyone).' },
       { name: 'Mirror Array', tag: 'illusion', cost: 2, range: 0, desc: 'All Mirage Protocol allies in 4-tile radius gain a decoy. Each decoy absorbs 1 hit.' },
-      { name: 'Mental Barrage', tag: 'psi', cost: 2, range: 4, desc: 'Deal 4 psi damage to up to 3 different enemies in range. Each hit causes -1 ATK for 2 turns.' },
+      { name: 'Mental Barrage', tag: 'psi', cost: 2, range: 4, desc: 'Deal 9 psi damage to up to 3 different enemies in range. Each hit causes -1 ATK for 2 turns.' },
     ],
     promotion: ['Echo Caster', 'Psi Node', 'Akashic Weave'],
   },
@@ -470,9 +517,9 @@ const ALL_UNITS = [
     passive: { name: 'Undying Protocol', desc: 'When reduced to 0 HP, reanimate at 6 HP once per battle. Reanimation also debuffs nearest enemy -2 ATK.' },
     abilities: [
       { name: 'Necrotic Claw', tag: 'necrotic', cost: 1, range: 1, desc: 'Deal ATK damage. Target gains -1 DEF for 2 turns (Corruption stacks).' },
-      { name: 'Grave Pulse', tag: 'undead', cost: 2, range: 0, desc: 'Emit corruption field: all adjacent enemies take 3 damage and lose 1 AP next turn.' },
-      { name: 'Death Grip', tag: 'necrotic', cost: 2, range: 2, desc: 'Drag target 2 tiles toward you and immobilize for 1 turn. Deal 4 damage.' },
-      { name: 'Soul Drain', tag: 'necrotic', cost: 2, range: 2, desc: 'Drain 8 HP from target. Heal self for 6. If target is already Corrupted, drain 12 HP.' },
+      { name: 'Grave Pulse', tag: 'undead', cost: 2, range: 0, desc: 'Emit corruption field: all adjacent enemies take 8 damage and lose 1 AP next turn.' },
+      { name: 'Death Grip', tag: 'necrotic', cost: 2, range: 2, desc: 'Drag target 2 tiles toward you and immobilize for 1 turn. Deal 10 damage.' },
+      { name: 'Soul Drain', tag: 'necrotic', cost: 2, range: 2, desc: 'Drain 14 HP from target. Heal self for 12. If target is already Corrupted, drain 20 HP.' },
     ],
     promotion: ['Revenant', 'Undead Knight', 'Lich Engine'],
   },
@@ -485,7 +532,7 @@ const ALL_UNITS = [
       { name: 'Blight Bolt', tag: 'necrotic', cost: 1, range: 4, desc: 'Deal ATK damage. Apply Corruption: target takes 2 dmg at turn start for 3 turns.' },
       { name: 'Plague Nova', tag: 'undead', cost: 2, range: 2, desc: 'Spread Corruption to all enemies within 2 tiles of a chosen already-Corrupted target.' },
       { name: 'Reanimate', tag: 'undead', cost: 2, range: 2, desc: 'Revive a defeated ally at 50% HP as a thrall that acts with 1 AP. Lasts 3 turns.' },
-      { name: 'Death Cascade', tag: 'necrotic', cost: 2, range: 3, desc: 'Chain reaction: deal 5 damage to target. If they die, auto-target nearest enemy for another hit.' },
+      { name: 'Death Cascade', tag: 'necrotic', cost: 2, range: 3, desc: 'Chain reaction: deal 12 damage to target. If they die, chain 8 damage to the nearest enemy.' },
     ],
     promotion: ['Pest Weaver', 'Plague Arch', 'Mortis Ascendant'],
   },
@@ -514,6 +561,62 @@ const ALL_UNITS = [
       { name: 'Oblivion Pulse', tag: 'undead', cost: 2, range: 2, desc: 'Massive corruption wave: deal ATK+2 to all units in 2-tile radius. Each hit unit gains 2 Corruption stacks.' },
     ],
     promotion: ['Dark Monolith', 'Void Obelisk', 'Null Colossus'],
+  },
+
+  // ========================
+  // VEX ORDER (4 units)
+  // ========================
+  {
+    id: 'vex_striker', name: 'Vex Striker', faction: 'vex', emoji: '◎',
+    tags: ['vex','resonance','melee'],
+    stats: { hp: 80, atk: 34, def: 16, mov: 3, sight: 2 },
+    passive: { name: 'Frequency Lock', desc: 'All attacks deal +2 damage per Resonance stack on the target. Stack up, then strike hard.' },
+    abilities: [
+      { name: 'Harmonic Strike', tag: 'resonance', cost: 1, range: 1, desc: 'Deal ATK damage. Apply 1 Resonance stack to target.' },
+      { name: 'Shatter Pulse', tag: 'resonance', cost: 2, range: 2, desc: 'Deal ATK+2 damage, plus +4 per Resonance stack. Consumes all stacks on hit.' },
+      { name: 'Resonant Chain', tag: 'resonance', cost: 2, range: 1, desc: 'Deal ATK damage to target. Echo 7 damage to all other enemies within 2 tiles.' },
+      { name: 'Concussion Wave', tag: 'vex', cost: 1, range: 0, desc: 'Deal 7 damage to all adjacent enemies and apply 1 Resonance stack to each.' },
+    ],
+    promotion: ['Vex Striker', 'Resonance Blade', 'Frequency Destroyer'],
+  },
+  {
+    id: 'vex_cantor', name: 'Vex Cantor', faction: 'vex', emoji: '◎',
+    tags: ['vex','resonance','support'],
+    stats: { hp: 65, atk: 22, def: 14, mov: 2, sight: 3 },
+    passive: { name: 'Resonance Keeper', desc: 'Support abilities apply 1 extra Resonance stack. Enemies cannot passively dispel resonance while Cantor lives.' },
+    abilities: [
+      { name: 'Silence', tag: 'vex', cost: 1, range: 3, desc: 'Target enemy cannot use abilities for 2 turns.' },
+      { name: 'Frequency Tap', tag: 'resonance', cost: 1, range: 3, desc: 'Apply 1 Resonance to target. If it already has stacks, spread 1 stack to all enemies within 2 tiles of it.' },
+      { name: 'Sympathetic Resonance', tag: 'resonance', cost: 2, range: 2, desc: 'Copy Resonance stacks from target to all enemies within 2 tiles of it.' },
+      { name: 'Vex Chorus', tag: 'vex', cost: 2, range: 0, desc: 'All Vex Order allies within 3 tiles gain ATK+2 for 2 turns.' },
+    ],
+    promotion: ['Vex Cantor', 'Resonance Choir', 'Harmonic Ascendant'],
+  },
+  {
+    id: 'vex_shattersong', name: 'Vex Shattersong', faction: 'vex', emoji: '◎',
+    tags: ['vex','resonance','artillery'],
+    stats: { hp: 70, atk: 40, def: 10, mov: 2, sight: 4 },
+    passive: { name: 'Overtone', desc: 'When hitting a target with 3 Resonance stacks, deal 4 splash damage to all adjacent enemies.' },
+    abilities: [
+      { name: 'Sonic Bolt', tag: 'resonance', cost: 1, range: 4, desc: 'Deal ATK damage. Apply 1 Resonance stack to target.' },
+      { name: 'Fracture Scream', tag: 'resonance', cost: 2, range: 3, desc: 'Requires 2+ Resonance stacks on target. Deal ATK+4 damage, ignores DEF.' },
+      { name: 'Wavecrash', tag: 'vex', cost: 2, range: 0, desc: 'Deal 10 damage to all enemies in 3-tile radius. Apply 1 Resonance stack to each.' },
+      { name: 'Silence Barrage', tag: 'vex', cost: 2, range: 4, desc: 'Deal ATK damage to target. Apply 1 Resonance stack and Silence for 1 turn.' },
+    ],
+    promotion: ['Vex Shattersong', 'Sonic Dreadnought', 'Frequency Annihilator'],
+  },
+  {
+    id: 'vex_resonant', name: 'Vex Resonant', faction: 'vex', emoji: '◎',
+    tags: ['vex','resonance','guardian'],
+    stats: { hp: 110, atk: 26, def: 28, mov: 2, sight: 2 },
+    passive: { name: 'Vibration Field', desc: 'At the start of each turn, adjacent enemies lose 1 HP per Resonance stack they carry.' },
+    abilities: [
+      { name: 'Null Chord', tag: 'resonance', cost: 1, range: 1, desc: 'Deal ATK+2 damage. Apply 2 Resonance stacks to target.' },
+      { name: 'Resonant Bulwark', tag: 'vex', cost: 1, range: 0, desc: 'Gain DEF+5 for 2 turns. Adjacent Vex Order allies gain ATK+2 for 1 turn.' },
+      { name: 'Ground Pulse', tag: 'resonance', cost: 2, range: 0, desc: 'Deal 5 damage per Resonance stack to all enemies in 2-tile radius. Does not consume stacks.' },
+      { name: 'Frequency Collapse', tag: 'resonance', cost: 2, range: 3, desc: 'Remove all Resonance from target. Deal 6 damage per stack removed (max 18).' },
+    ],
+    promotion: ['Vex Resonant', 'Warden of Frequencies', 'Resonance Colossus'],
   },
 ];
 
@@ -917,11 +1020,11 @@ function renderBattleGrid() {
     }
   }
   placeAllTokens();
-  // Warp-in all tokens at battle start
+  // Warp-in player tokens at battle start (enemy warp is suppressed)
   if (gameState.options.anim) {
     setTimeout(() => {
       const b = gameState.battle;
-      [...b.playerUnits, ...b.cpuUnits].forEach((u, i) => {
+      b.playerUnits.forEach((u, i) => {
         setTimeout(() => {
           const c = getCell(u.row, u.col);
           if (c) vfxWarpSpawn(c, FACTIONS[u.unit.faction].color);
@@ -988,6 +1091,22 @@ function updateFogOfWar() {
       const eToken = cell.querySelector('.enemy-unit');
       if (eToken) eToken.style.opacity = inSight ? '1' : '0';
     }
+  }
+  // Online mode: hide stealthed enemy units unless a player unit is adjacent
+  if (b.online) {
+    b.cpuUnits.forEach(eu => {
+      if (!hasStatus(eu, 'stealth')) return;
+      const adjacent = b.playerUnits.some(pu =>
+        Math.abs(pu.row - eu.row) + Math.abs(pu.col - eu.col) <= 1
+      );
+      if (!adjacent) {
+        const cell = getCell(eu.row, eu.col);
+        if (cell) {
+          const tok = cell.querySelector('.enemy-unit');
+          if (tok) tok.style.opacity = '0';
+        }
+      }
+    });
   }
 }
 
@@ -1079,8 +1198,8 @@ function placeTileEffect(r, c, abilityName, casterFaction, casterAtk, casterSide
   const def = TILE_EFFECT_DEFS[abilityName];
   if (!def) return;
 
-  // Rift Veil occupies a 3x1 horizontal zone
-  if (abilityName === 'Rift Veil' && !_singleCell) {
+  // Rift Veil and Inferno Wall occupy a 3x1 horizontal zone
+  if ((abilityName === 'Rift Veil' || abilityName === 'Inferno Wall') && !_singleCell) {
     for (let dc = -1; dc <= 1; dc++) {
       const nc = c + dc;
       if (nc >= 0 && nc < 8) placeTileEffect(r, nc, abilityName, casterFaction, casterAtk, casterSide, true);
@@ -1153,6 +1272,9 @@ function renderAllTileEffects() {
 function tickTileEffects() {
   const b = gameState.battle;
   if (!b) return;
+
+  // Tick status effects (burn, corruption, stun, etc.) first
+  tickStatusEffects();
 
   // Decrement all effects
   b.tileEffects.forEach(e => { e.turnsLeft--; });
@@ -1316,6 +1438,227 @@ function detonateCausalityBomb(effect) {
     });
     placeAllTokens(); updateFogOfWar(); checkVictory();
   }, 450);
+}
+
+// ============================================================
+// STATUS EFFECTS, BUFFS & BATTLE HELPERS
+// ============================================================
+
+// Apply a status effect. Corruption stacks; all others refresh duration.
+function applyStatus(unit, type, turns, value) {
+  if (!unit.statusEffects) unit.statusEffects = [];
+  if (type === 'corruption') {
+    unit.statusEffects.push({ type, turnsLeft: turns, value: value || 2 });
+  } else {
+    const ex = unit.statusEffects.find(s => s.type === type);
+    if (ex) { ex.turnsLeft = turns; if (value !== undefined) ex.value = value; }
+    else unit.statusEffects.push({ type, turnsLeft: turns, value: value || 0 });
+  }
+}
+
+function hasStatus(unit, type) {
+  return !!(unit.statusEffects && unit.statusEffects.find(s => s.type === type));
+}
+
+function clearStatus(unit, type) {
+  if (unit.statusEffects) unit.statusEffects = unit.statusEffects.filter(s => s.type !== type);
+}
+
+function clearAllDebuffs(unit) {
+  const debuffs = ['burn','corruption','stun','confusion','ap_loss','def_down','atk_down','infection','resonance','silence'];
+  if (unit.statusEffects) unit.statusEffects = unit.statusEffects.filter(s => !debuffs.includes(s.type));
+}
+
+function getEffectiveAtk(unit) {
+  let mod = 0;
+  (unit.statusEffects || []).forEach(s => {
+    if (s.type === 'atk_down') mod -= s.value;
+    if (s.type === 'atk_buff') mod += s.value;
+    if (s.type === 'infection') mod -= 1;
+  });
+  return Math.max(1, unit.unit.stats.atk + mod);
+}
+
+function getEffectiveDef(unit) {
+  let mod = 0;
+  (unit.statusEffects || []).forEach(s => {
+    if (s.type === 'def_down') mod -= s.value;
+    if (s.type === 'def_buff') mod += s.value;
+    if (s.type === 'infection') mod -= 1;
+  });
+  return Math.max(0, unit.unit.stats.def + mod);
+}
+
+// Deal damage from caster to target. ignoresDef = bypass DEF.
+// Haunt doubles damage received. Returns actual damage dealt.
+function dealDamage(caster, target, baseDmg, ignoresDef) {
+  const def = ignoresDef ? 0 : getEffectiveDef(target);
+  let dmg = ignoresDef
+    ? Math.max(1, baseDmg)
+    : Math.max(Math.floor(baseDmg * 0.25), baseDmg - Math.floor(def * 0.5));
+  if (hasStatus(target, 'haunt')) dmg *= 2;
+  // Vex Order — Frequency Lock: +2 per Resonance stack on target
+  if (caster && caster.unit && caster.unit.faction === 'vex') {
+    dmg += getResonanceStacks(target) * 2;
+  }
+  target.hp -= dmg;
+  return dmg;
+}
+
+// AoE damage to a list of targets. Fires VFX floaters. Returns killed units.
+function dealAoeDamage(caster, targets, baseDmg, ignoresDef) {
+  const color = FACTIONS[caster.unit.faction].color;
+  const killed = [];
+  targets.forEach(t => {
+    const dmg = dealDamage(caster, t, baseDmg, ignoresDef);
+    const cell = getCell(t.row, t.col);
+    if (cell) { spawnFloater(cell, `-${dmg}`, color); flashCell(cell, color + '66'); shakeToken(cell); }
+    if (t.hp <= 0) killed.push(t);
+  });
+  return killed;
+}
+
+// Pull unit one tile toward (tr, tc) if destination is free.
+function pullUnitToward(unit, tr, tc, b) {
+  const dr = Math.sign(tr - unit.row), dc = Math.sign(tc - unit.col);
+  const nr = unit.row + dr, nc = unit.col + dc;
+  if (nr < 0 || nr >= 8 || nc < 0 || nc >= 8) return;
+  const occ = b.playerUnits.some(u => u !== unit && u.row === nr && u.col === nc)
+           || b.cpuUnits.some(u => u !== unit && u.row === nr && u.col === nc);
+  if (!occ) { unit.row = nr; unit.col = nc; }
+}
+
+// Teleport a unit to (tr, tc) if unoccupied. Returns true on success.
+function teleportUnit(unit, tr, tc, b) {
+  if (tr < 0 || tr >= 8 || tc < 0 || tc >= 8) return false;
+  const occ = b.playerUnits.some(u => u !== unit && u.row === tr && u.col === tc)
+           || b.cpuUnits.some(u => u !== unit && u.row === tr && u.col === tc);
+  if (occ) return false;
+  const fromCell = getCell(unit.row, unit.col);
+  unit.row = tr; unit.col = tc;
+  const color = FACTIONS[unit.unit.faction].color;
+  if (fromCell) vfxWarpSpawn(fromCell, color);
+  setTimeout(() => { const toCell = getCell(tr, tc); if (toCell) vfxWarpSpawn(toCell, color); }, 160);
+  return true;
+}
+
+// Returns enemies within Manhattan radius of (r, c).
+function enemiesInRadius(r, c, radius, b) {
+  return (b.cpuUnits || []).filter(u => Math.abs(u.row - r) + Math.abs(u.col - c) <= radius);
+}
+
+// Returns player units within Manhattan radius of (r, c).
+function alliesInRadius(r, c, radius, b) {
+  return (b.playerUnits || []).filter(u => Math.abs(u.row - r) + Math.abs(u.col - c) <= radius);
+}
+
+// ── VEX ORDER — RESONANCE ─────────────────────────────────────────────────
+// Apply `stacks` Resonance to a unit (max 3 total). Stored as a single status
+// entry where .value = current stacks and .turnsLeft mirrors .value so the
+// status decays 1 stack per tick via the normal turnsLeft-- path.
+function applyResonance(unit, stacks = 1) {
+  if (!unit.statusEffects) unit.statusEffects = [];
+  const ex = unit.statusEffects.find(s => s.type === 'resonance');
+  if (ex) {
+    ex.value = Math.min(3, ex.value + stacks);
+    ex.turnsLeft = ex.value;
+  } else {
+    const v = Math.min(3, stacks);
+    unit.statusEffects.push({ type: 'resonance', turnsLeft: v, value: v });
+  }
+}
+
+function getResonanceStacks(unit) {
+  const s = (unit.statusEffects || []).find(e => e.type === 'resonance');
+  return s ? s.value : 0;
+}
+
+// Status label/color for UI badges
+function statusBadgeHtml(s) {
+  const map = {
+    burn:       ['🔥 BURN',    '#ff5c1a'],
+    corruption: ['☠ CORRUPT', '#50ff80'],
+    stun:       ['⏸ STUN',    '#00e5ff'],
+    confusion:  ['💫 CONFUSE','#c940ff'],
+    infection:  ['🦠 INFECT', '#80ff80'],
+    ap_loss:    ['⚡ -AP',     '#f0c040'],
+    def_down:   ['🛡↓ DEF',   '#ff3344'],
+    atk_down:   ['⚔↓ ATK',   '#ff3344'],
+    def_buff:   ['🛡↑ DEF',   '#50ff80'],
+    atk_buff:   ['⚔↑ ATK',   '#00e5ff'],
+    haunt:      ['👻 HAUNT',  '#c940ff'],
+    stealth:    ['🌫 STLTH',  '#c940ff'],
+    resonance:  ['◎ RESON',   '#f5c842'],
+    silence:    ['🔇 SILENT', '#f5c842'],
+  };
+  const [label, color] = map[s.type] || [s.type.toUpperCase(), '#888'];
+  // Resonance shows stack count instead of turn duration
+  const suffix = s.type === 'resonance'
+    ? ` ×${s.value}`
+    : (s.turnsLeft > 0 ? ' ' + s.turnsLeft + 'T' : '');
+  return `<span style="font-size:8px;font-family:'Share Tech Mono',monospace;padding:1px 4px;border:1px solid ${color};color:${color};margin:1px;display:inline-block">${label}${suffix}</span>`;
+}
+
+// Tick status effects. Called at turn start.
+function tickStatusEffects() {
+  const b = gameState.battle;
+  if (!b) return;
+  const allUnits = [...b.playerUnits, ...b.cpuUnits];
+  const toKill = [];
+  allUnits.forEach(unit => {
+    if (!unit.statusEffects || !unit.statusEffects.length) return;
+    unit.statusEffects.forEach(s => {
+      const cell = getCell(unit.row, unit.col);
+      if (s.type === 'burn') {
+        unit.hp -= s.value;
+        if (cell) spawnFloater(cell, `-${s.value}🔥`, '#ff5c1a');
+        if (unit.hp <= 0) toKill.push(unit);
+      } else if (s.type === 'corruption') {
+        unit.hp -= s.value;
+        if (cell) spawnFloater(cell, `-${s.value}☠`, '#50ff80');
+        if (unit.hp <= 0) toKill.push(unit);
+      } else if (s.type === 'ap_loss') {
+        unit.ap = Math.max(0, (unit.ap || 2) - 1);
+      } else if (s.type === 'resonance') {
+        // Decay 1 stack per tick; sync value so badge stays accurate
+        s.value = Math.max(0, s.value - 1);
+        if (s.value === 0) { s.turnsLeft = 0; return; }
+      }
+      s.turnsLeft--;
+    });
+    unit.statusEffects = unit.statusEffects.filter(s => s.turnsLeft > 0);
+    // Reset movedThisTurn at turn start
+    unit.movedThisTurn = false;
+  });
+  // Vex Order — Vibration Field passive: Vex Resonant units deal 1 HP per
+  // Resonance stack to each adjacent enemy at the start of every turn.
+  const allForVF = [...b.playerUnits, ...b.cpuUnits];
+  allForVF.forEach(resonantUnit => {
+    if (resonantUnit.unit.id !== 'vex_resonant') return;
+    const enemies = resonantUnit.unit.faction === 'vex'
+      ? b.cpuUnits   // player-controlled vex resonant → enemies are cpu
+      : b.playerUnits; // cpu-controlled → enemies are player
+    enemies.forEach(enemy => {
+      const dist = Math.abs(enemy.row - resonantUnit.row) + Math.abs(enemy.col - resonantUnit.col);
+      if (dist !== 1) return;
+      const stacks = getResonanceStacks(enemy);
+      if (stacks <= 0) return;
+      enemy.hp -= stacks;
+      const ec = getCell(enemy.row, enemy.col);
+      if (ec) spawnFloater(ec, `-${stacks}◎`, '#f5c842');
+      if (enemy.hp <= 0) toKill.push(enemy);
+    });
+  });
+  // Handle deaths from DoT after short delay for VFX
+  [...new Set(toKill)].forEach(unit => {
+    if (unit.hp > 0) return; // already handled or hp went back up
+    setTimeout(() => {
+      const b2 = gameState.battle;
+      if (!b2) return;
+      if (b2.playerUnits.includes(unit)) handlePlayerDeath(unit);
+      else if (b2.cpuUnits.includes(unit)) handleEnemyDeath(unit);
+    }, 200);
+  });
 }
 
 // ── Tooltip ───────────────────────────────────────────────────────────────
@@ -1860,7 +2203,9 @@ function attemptMove(r, c) {
   if (dist > u.unit.stats.mov) { showToast('Out of range'); return; }
   const occ = b.playerUnits.some(p=>p!==u&&p.row===r&&p.col===c)||b.cpuUnits.some(e=>e.row===r&&e.col===c);
   if (occ) { showToast('Tile occupied'); return; }
+  u.prevRow = u.row; u.prevCol = u.col; // for Time Echo
   u.row=r; u.col=c; u.ap--;
+  u.movedThisTurn = true;
   addTimelineEntry('player', `${u.unit.name} relocated`, 'move');
   placeAllTokens(); updateFogOfWar();
   // Warp VFX at new position
@@ -1923,13 +2268,867 @@ function handlePlayerDeath(unit) {
   checkVictory();
 }
 
+// ============================================================
+// PER-ABILITY LOGIC  — returns true if the ability was fully handled
+// ============================================================
+function handleSpecificAbility(ability, u, r, c, b) {
+  const name = ability.name;
+  const fc   = FACTIONS[u.unit.faction];
+  const target     = b.cpuUnits.find(e => e.row === r && e.col === c);
+  const allyTarget = b.playerUnits.find(p => p.row === r && p.col === c);
+  const uCell = getCell(u.row, u.col);
+  const tCell = getCell(r, c);
+
+  // Shared finish helper (deducts AP, logs, refreshes view)
+  function finish(logText) {
+    u.ap -= ability.cost;
+    b.lastAbilityUsed = name;
+    addTimelineEntry('player', `${u.unit.name}: ${logText || name}`, 'ability');
+    placeAllTokens(); updateFogOfWar(); selectBattleUnit(u);
+  }
+  function finishKill(logText, enemy) {
+    u.ap -= ability.cost;
+    b.lastAbilityUsed = name;
+    addTimelineEntry('player', `${u.unit.name}: ${logText || name}`, 'ability');
+    handleEnemyDeath(enemy);
+    // Re-select the unit to clear highlights, reset actionMode, and refresh the panel
+    if (b.playerUnits.includes(u)) selectBattleUnit(u);
+  }
+
+  // ── CHRONO SYNDICATE ─────────────────────────────────────────────────────
+  if (name === 'Temporal Cut') {
+    if (!target) { showToast('No target'); return true; }
+    let base = u.unit.stats.atk + (target.movedThisTurn ? 4 : 0);
+    const dmg = dealDamage(u, target, base, false);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, fc.color+'66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg}${target.movedThisTurn?' ⚡':''}`, fc.color); } }, 200);
+    showToast(`Temporal Cut: -${dmg}${target.movedThisTurn ? ' (momentum bonus!)' : ''}`);
+    if (target.hp <= 0) { finishKill(`Temporal Cut → -${dmg}`, target); return true; }
+    finish(`Temporal Cut → -${dmg}`); return true;
+  }
+
+  if (name === 'Blink Strike') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 2, false);
+    const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+    for (const [dr, dc] of dirs) { if (teleportUnit(u, r+dr, c+dc, b)) break; }
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, fc.color+'66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg}`, fc.color); } }, 200);
+    showToast(`Blink Strike: teleported + -${dmg}`);
+    if (target.hp <= 0) { finishKill(`Blink Strike → -${dmg}`, target); return true; }
+    finish(`Blink Strike → -${dmg}`); return true;
+  }
+
+  if (name === 'Time Echo') {
+    const heal = 18;
+    u.hp = Math.min(u.maxHp, u.hp + heal);
+    if (u.prevRow !== undefined) teleportUnit(u, u.prevRow, u.prevCol, b);
+    if (uCell) { spawnFloater(uCell, `+${heal} REWIND`, '#50ff80'); flashCell(uCell, 'rgba(80,255,128,0.4)'); }
+    showToast(`Time Echo: +${heal} HP, position reverted`);
+    finish(`Time Echo +${heal} HP`); return true;
+  }
+
+  if (name === 'Paradox Slash') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg1 = dealDamage(u, target, u.unit.stats.atk, false);
+    const dmg2 = Math.max(1, Math.floor(u.unit.stats.atk * 0.5));
+    target.hp -= dmg2;
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, fc.color+'66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg1}`, fc.color); } }, 200);
+    setTimeout(() => { if (tCell) spawnFloater(tCell, `-${dmg2}`, fc.color); }, 500);
+    showToast(`Paradox Slash: -${dmg1} then -${dmg2}`);
+    if (target.hp <= 0) { finishKill(`Paradox Slash → -${dmg1}/-${dmg2}`, target); return true; }
+    finish(`Paradox Slash → -${dmg1}/-${dmg2}`); return true;
+  }
+
+  if (name === 'Rewind') {
+    const healT = allyTarget || u;
+    healT.hp = Math.min(healT.maxHp, healT.hp + 22);
+    clearAllDebuffs(healT);
+    const hCell = getCell(healT.row, healT.col);
+    if (uCell && hCell) vfxAbility(uCell, hCell, '#50ff80', name);
+    if (hCell) { spawnFloater(hCell, '+22 REWIND', '#50ff80'); flashCell(hCell, 'rgba(80,255,128,0.5)'); }
+    showToast(`Rewind: +22 HP + all debuffs cleared`);
+    finish('Rewind'); return true;
+  }
+
+  if (name === 'Time Stop') {
+    if (!target) { showToast('No target'); return true; }
+    applyStatus(target, 'stun', 2, 0);
+    placeTileEffect(r, c, name, u.unit.faction, u.unit.stats.atk, 'player');
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) { flashCell(tCell, fc.color+'88'); spawnFloater(tCell, '⏸ STUNNED', fc.color); }
+    showToast(`Time Stop: ${target.unit.name} stunned 2 turns`);
+    finish(`Time Stop → ${target.unit.name} stunned`); return true;
+  }
+
+  if (name === 'Void Step') {
+    if (!teleportUnit(u, r, c, b)) { showToast('Tile occupied'); return true; }
+    showToast('Void Step: teleported!');
+    finish('Void Step'); return true;
+  }
+
+  if (name === 'Entropy Bolt') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    applyStatus(target, 'ap_loss', 1, 1);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, fc.color+'66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} -AP`, fc.color); } }, 200);
+    showToast(`Entropy Bolt: -${dmg}, target loses 1 AP next turn`);
+    if (target.hp <= 0) { finishKill(`Entropy Bolt → -${dmg}`, target); return true; }
+    finish(`Entropy Bolt → -${dmg}`); return true;
+  }
+
+  if (name === 'Singularity') {
+    const pulled = enemiesInRadius(r, c, 2, b);
+    pulled.forEach(e => pullUnitToward(e, r, c, b));
+    placeTileEffect(r, c, name, u.unit.faction, u.unit.stats.atk, 'player');
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) { flashCell(tCell, fc.color+'88'); spawnFloater(tCell, `⊗ PULL ×${pulled.length}`, fc.color); }
+    showToast(`Singularity: pulled ${pulled.length} enemies`);
+    finish(`Singularity — ${pulled.length} pulled`); return true;
+  }
+
+  if (name === 'Chrono Beam') {
+    const beam = b.cpuUnits.filter(e => e.row === u.row && Math.abs(e.col - u.col) <= 4 && Math.sign(e.col - u.col) === Math.sign(c - u.col));
+    if (!beam.length) { showToast('No enemies in beam path'); return true; }
+    beam.forEach(e => {
+      const dmg = Math.max(3, u.unit.stats.atk - 1);
+      e.hp -= dmg;
+      const ec = getCell(e.row, e.col);
+      setTimeout(() => { if (ec) { flashCell(ec, fc.color+'66'); shakeToken(ec); spawnFloater(ec, `-${dmg}`, fc.color); } }, 300);
+    });
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    showToast(`Chrono Beam: hit ${beam.length} units`);
+    beam.filter(e => e.hp <= 0).forEach(e => setTimeout(() => handleEnemyDeath(e), 450));
+    finish(`Chrono Beam — ${beam.length} hit`); return true;
+  }
+
+  if (name === 'Epoch Burst') {
+    const targets = enemiesInRadius(r, c, 2, b);
+    if (!targets.length) { showToast('No enemies in burst radius'); return true; }
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    const killed = dealAoeDamage(u, targets, u.unit.stats.atk + 4, false);
+    showToast(`Epoch Burst: ${targets.length} enemies hit`);
+    killed.forEach(e => setTimeout(() => handleEnemyDeath(e), 400));
+    finish(`Epoch Burst — ${targets.length} hit`); return true;
+  }
+
+  // ── IGNIS COLLECTIVE ─────────────────────────────────────────────────────
+  if (name === 'Flame Strike') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    applyStatus(target, 'burn', 3, 2);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#ff5c1a66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} 🔥`, '#ff5c1a'); } }, 200);
+    showToast(`Flame Strike: -${dmg} + Burn 3 turns`);
+    if (target.hp <= 0) { finishKill(`Flame Strike → -${dmg}`, target); return true; }
+    finish(`Flame Strike → -${dmg} + Burn`); return true;
+  }
+
+  if (name === 'Ignition Charge') {
+    if (!target) { showToast('No target'); return true; }
+    const dr = Math.sign(r - u.row), dc = Math.sign(c - u.col);
+    let cr = u.row + dr, cc = u.col + dc, pathDmg = 0;
+    while ((cr !== r || cc !== c) && cr >= 0 && cr < 8 && cc >= 0 && cc < 8) {
+      const pe = b.cpuUnits.find(e => e.row === cr && e.col === cc);
+      if (pe) { pe.hp -= 7; pathDmg += 7; const pc = getCell(cr, cc); if (pc) spawnFloater(pc, '-7', '#ff5c1a'); }
+      cr += dr; cc += dc;
+    }
+    teleportUnit(u, Math.max(0, Math.min(7, r - dr)), Math.max(0, Math.min(7, c - dc)), b);
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#ff5c1a66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg}`, '#ff5c1a'); } }, 200);
+    showToast(`Ignition Charge: dashed, -${dmg}${pathDmg ? ` + ${pathDmg} path` : ''}`);
+    if (target.hp <= 0) { finishKill(`Ignition Charge → -${dmg}`, target); return true; }
+    finish(`Ignition Charge → -${dmg}`); return true;
+  }
+
+  if (name === 'Scorch Nova') {
+    const adj = [...b.cpuUnits, ...b.playerUnits].filter(unit => unit !== u && Math.abs(unit.row - u.row) + Math.abs(unit.col - u.col) === 1);
+    if (!adj.length) { showToast('No adjacent units'); return true; }
+    adj.forEach(unit => {
+      unit.hp -= u.unit.stats.atk;
+      const ac = getCell(unit.row, unit.col);
+      if (ac) { spawnFloater(ac, `-${u.unit.stats.atk}`, '#ff5c1a'); flashCell(ac, '#ff5c1a66'); shakeToken(ac); }
+    });
+    if (uCell) spawnFloater(uCell, '🔥 NOVA', '#ff5c1a');
+    showToast(`Scorch Nova: ${u.unit.stats.atk} dmg to ${adj.length} adjacent units`);
+    adj.filter(unit => unit.hp <= 0 && b.cpuUnits.includes(unit)).forEach(e => setTimeout(() => handleEnemyDeath(e), 350));
+    adj.filter(unit => unit.hp <= 0 && b.playerUnits.includes(unit)).forEach(p => setTimeout(() => handlePlayerDeath(p), 350));
+    finish(`Scorch Nova — ${adj.length} hit`); return true;
+  }
+
+  if (name === 'Meltdown') {
+    if (!target) { showToast('No target'); return true; }
+    let base = u.unit.stats.atk + 3;
+    const melted = hasStatus(target, 'burn');
+    if (melted) { base *= 2; clearStatus(target, 'burn'); }
+    const dmg = dealDamage(u, target, base, false);
+    if (uCell && tCell) vfxAbility(uCell, tCell, '#ff5c1a', name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#ff5c1a88'); shakeToken(tCell); spawnFloater(tCell, `-${dmg}${melted ? ' MELT!' : ''}`, '#ff5c1a'); } }, 200);
+    showToast(`Meltdown: -${dmg}${melted ? ' (Burn detonated — DOUBLE!)' : ''}`);
+    if (target.hp <= 0) { finishKill(`Meltdown → -${dmg}`, target); return true; }
+    finish(`Meltdown → -${dmg}`); return true;
+  }
+
+  if (name === 'Plasma Bolt') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 1, true);
+    applyStatus(target, 'burn', 3, 2);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#ff8c3a66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} 🔥`, '#ff8c3a'); } }, 200);
+    showToast(`Plasma Bolt: -${dmg} (ignores DEF) + Burn`);
+    if (target.hp <= 0) { finishKill(`Plasma Bolt → -${dmg}`, target); return true; }
+    finish(`Plasma Bolt → -${dmg} + Burn`); return true;
+  }
+
+  if (name === 'Ash Eruption') {
+    const targets = enemiesInRadius(r, c, 2, b);
+    if (!targets.length) { showToast('No enemies in blast'); return true; }
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    const killed = dealAoeDamage(u, targets, u.unit.stats.atk + 2, false);
+    targets.filter(e => !killed.includes(e)).forEach(e => applyStatus(e, 'burn', 3, 2));
+    showToast(`Ash Eruption: ${targets.length} hit + Burn`);
+    killed.forEach(e => setTimeout(() => handleEnemyDeath(e), 400));
+    finish(`Ash Eruption — ${targets.length} hit`); return true;
+  }
+
+  if (name === 'Solar Flare') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk * 2, true);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#ff8c3a99'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} ☀`, '#ff8c3a'); } }, 200);
+    showToast(`Solar Flare: -${dmg} (2×ATK, ignores DEF)`);
+    if (target.hp <= 0) { finishKill(`Solar Flare → -${dmg}`, target); return true; }
+    finish(`Solar Flare → -${dmg}`); return true;
+  }
+
+  if (name === 'Fire Dash') {
+    const dr = Math.sign(r - u.row), dc = Math.sign(c - u.col);
+    let cr = u.row + dr, cc = u.col + dc, steps = 0;
+    while (steps < 3 && cr >= 0 && cr < 8 && cc >= 0 && cc < 8) {
+      const pe = b.cpuUnits.find(e => e.row === cr && e.col === cc);
+      if (pe) { pe.hp -= 7; const pc = getCell(cr, cc); if (pc) spawnFloater(pc, '-7', '#ff5c1a'); }
+      const blocked = b.cpuUnits.some(e => e.row === cr && e.col === cc) || b.playerUnits.some(p => p !== u && p.row === cr && p.col === cc);
+      if (!blocked) { u.row = cr; u.col = cc; }
+      else break;
+      cr += dr; cc += dc; steps++;
+    }
+    if (uCell) vfxAbility(uCell, getCell(u.row, u.col) || uCell, '#ff5c1a', name);
+    showToast('Fire Dash: dashed through the field!');
+    finish('Fire Dash'); return true;
+  }
+
+  if (name === 'Fuel Inject') {
+    u.ap = Math.min(u.ap + 1, 3); // bonus AP (before cost deduction below)
+    applyStatus(u, 'atk_buff', 2, 2);
+    u.hp = Math.max(1, u.hp - 3);
+    if (uCell) { spawnFloater(uCell, '+1 AP +2 ATK', '#ff8c3a'); flashCell(uCell, '#ff8c3a44'); }
+    showToast('Fuel Inject: +1 AP, +2 ATK for 2 turns, -3 HP self');
+    finish('Fuel Inject'); return true;
+  }
+
+  if (name === 'Detonation Protocol') {
+    const adj = [...b.cpuUnits, ...b.playerUnits].filter(unit => unit !== u && Math.abs(unit.row - u.row) + Math.abs(unit.col - u.col) === 1);
+    const dmg = u.unit.stats.atk * 2;
+    adj.forEach(unit => {
+      unit.hp -= dmg;
+      const ac = getCell(unit.row, unit.col);
+      if (ac) { spawnFloater(ac, `-${dmg}`, '#ff5c1a'); flashCell(ac, '#ff5c1a88'); shakeToken(ac); }
+    });
+    u.hp = Math.max(1, u.hp); // survive with 1 HP
+    u.hp = 1;
+    if (uCell) { spawnFloater(uCell, '💥 DETONATE', '#ff5c1a'); flashCell(uCell, '#ff5c1a88'); }
+    showToast(`Detonation Protocol: ${dmg} dmg to ${adj.length} units — survived at 1 HP!`);
+    adj.filter(unit => unit.hp <= 0 && b.cpuUnits.includes(unit)).forEach(e => setTimeout(() => handleEnemyDeath(e), 350));
+    adj.filter(unit => unit.hp <= 0 && b.playerUnits.includes(unit)).forEach(p => setTimeout(() => handlePlayerDeath(p), 350));
+    finish('Detonation Protocol'); return true;
+  }
+
+  if (name === 'Heat Shield') {
+    applyStatus(u, 'def_buff', 1, 6);
+    const adjA = b.playerUnits.filter(p => p !== u && Math.abs(p.row - u.row) + Math.abs(p.col - u.col) === 1);
+    adjA.forEach(a => applyStatus(a, 'def_buff', 1, 2));
+    placeTileEffect(r, c, name, u.unit.faction, u.unit.stats.atk, 'player');
+    if (uCell) { spawnFloater(uCell, '🛡 DEF+6', '#ff8c3a'); flashCell(uCell, '#ff8c3a44'); }
+    adjA.forEach(a => { const ac = getCell(a.row, a.col); if (ac) spawnFloater(ac, '🛡 DEF+2', '#ff8c3a'); });
+    showToast(`Heat Shield: DEF+6 self + DEF+2 to ${adjA.length} allies`);
+    finish('Heat Shield'); return true;
+  }
+
+  if (name === 'Core Breach') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 4, true);
+    applyStatus(target, 'burn', 3, 2);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#ff5c1a88'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} 🔥`, '#ff5c1a'); } }, 200);
+    showToast(`Core Breach: -${dmg} (ignores DEF) + Burn`);
+    if (target.hp <= 0) { finishKill(`Core Breach → -${dmg}`, target); return true; }
+    finish(`Core Breach → -${dmg}`); return true;
+  }
+
+  // ── MIRAGE PROTOCOL ──────────────────────────────────────────────────────
+  if (name === 'Mind Stab') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, true);
+    applyStatus(target, 'confusion', 1, 0);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#c940ff66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} 💫`, '#c940ff'); } }, 200);
+    showToast(`Mind Stab: -${dmg} (bypasses DEF) + Confused`);
+    if (target.hp <= 0) { finishKill(`Mind Stab → -${dmg}`, target); return true; }
+    finish(`Mind Stab → -${dmg} + Confused`); return true;
+  }
+
+  if (name === 'Mirage Dash') {
+    if (!target) { showToast('No target'); return true; }
+    const dr = Math.sign(u.row - target.row), dc = Math.sign(u.col - target.col);
+    teleportUnit(u, Math.max(0, Math.min(7, target.row + dr)), Math.max(0, Math.min(7, target.col + dc)), b);
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 3, false);
+    applyStatus(u, 'stealth', 1, 0);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#c940ff66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg}`, '#c940ff'); } }, 200);
+    showToast(`Mirage Dash: teleported behind target, -${dmg}`);
+    if (target.hp <= 0) { finishKill(`Mirage Dash → -${dmg}`, target); return true; }
+    finish(`Mirage Dash → -${dmg}`); return true;
+  }
+
+  if (name === 'Psi Shatter') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 2, false);
+    // Strip positive buffs from target
+    if (target.statusEffects) target.statusEffects = target.statusEffects.filter(s => !['atk_buff','def_buff','stealth'].includes(s.type));
+    applyStatus(target, 'stun', 1, 0);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#c940ff88'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} ⏸`, '#c940ff'); } }, 200);
+    showToast(`Psi Shatter: -${dmg}, buffs stripped, stunned 1 turn`);
+    if (target.hp <= 0) { finishKill(`Psi Shatter → -${dmg}`, target); return true; }
+    finish(`Psi Shatter → -${dmg} + Stun`); return true;
+  }
+
+  if (name === 'Hallucinate') {
+    if (!target) { showToast('No target'); return true; }
+    applyStatus(target, 'confusion', 2, 0);
+    placeTileEffect(r, c, name, u.unit.faction, u.unit.stats.atk, 'player');
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) { flashCell(tCell, '#c940ff66'); spawnFloater(tCell, '💫 HALLUCINATING', '#c940ff'); }
+    showToast(`Hallucinate: ${target.unit.name} confused 2 turns`);
+    finish(`Hallucinate → ${target.unit.name} confused`); return true;
+  }
+
+  if (name === 'Mental Barrage') {
+    const inRange = b.cpuUnits.filter(e => Math.abs(e.row - u.row) + Math.abs(e.col - u.col) <= ability.range).slice(0, 3);
+    if (!inRange.length) { showToast('No targets in range'); return true; }
+    inRange.forEach(e => {
+      e.hp -= 9; applyStatus(e, 'atk_down', 2, 1);
+      const ec = getCell(e.row, e.col);
+      if (ec) { spawnFloater(ec, '-9 PSI', '#c940ff'); flashCell(ec, '#c940ff66'); }
+    });
+    if (uCell && inRange[0]) vfxAbility(uCell, getCell(inRange[0].row, inRange[0].col), fc.color, name);
+    showToast(`Mental Barrage: hit ${inRange.length} targets, -1 ATK each`);
+    inRange.filter(e => e.hp <= 0).forEach(e => setTimeout(() => handleEnemyDeath(e), 350));
+    finish(`Mental Barrage — ${inRange.length} hit`); return true;
+  }
+
+  if (name === 'Mass Confusion') {
+    const confused = enemiesInRadius(r, c, 3, b);
+    confused.forEach(e => applyStatus(e, 'confusion', 1, 0));
+    placeTileEffect(r, c, name, u.unit.faction, u.unit.stats.atk, 'player');
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) { flashCell(tCell, '#c940ff66'); spawnFloater(tCell, `💫 ×${confused.length}`, '#c940ff'); }
+    showToast(`Mass Confusion: ${confused.length} enemies confused`);
+    finish(`Mass Confusion — ${confused.length} confused`); return true;
+  }
+
+  if (name === 'Phantom Strike' || name === 'Phase Through') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 1, true);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#c940ff66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg}`, '#c940ff'); } }, 200);
+    showToast(`${name}: -${dmg} (unblockable)`);
+    if (target.hp <= 0) { finishKill(`${name} → -${dmg}`, target); return true; }
+    finish(`${name} → -${dmg}`); return true;
+  }
+
+  if (name === 'Haunt') {
+    if (!target) { showToast('No target'); return true; }
+    applyStatus(target, 'haunt', 2, 0);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) { flashCell(tCell, '#c940ff66'); spawnFloater(tCell, '👻 HAUNTED', '#c940ff'); }
+    showToast(`Haunt: ${target.unit.name} takes double damage for 2 turns`);
+    finish(`Haunt → ${target.unit.name}`); return true;
+  }
+
+  if (name === 'Veil Shroud') {
+    const healT = allyTarget || u;
+    applyStatus(healT, 'stealth', 2, 0);
+    const hCell = getCell(healT.row, healT.col);
+    if (uCell && hCell) vfxAbility(uCell, hCell, fc.color, name);
+    if (hCell) { spawnFloater(hCell, '🌫 STEALTH 2T', '#c940ff'); flashCell(hCell, '#c940ff44'); }
+    showToast(`Veil Shroud: ${healT.unit.name} stealthed 2 turns`);
+    finish(`Veil Shroud → ${healT.unit.name}`); return true;
+  }
+
+  if (name === 'Copycat') {
+    const lastAb = b.lastAbilityUsed;
+    if (lastAb && target) {
+      const dmg = dealDamage(u, target, Math.floor(u.unit.stats.atk * 0.5), false);
+      if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+      if (tCell) spawnFloater(tCell, `-${dmg} COPY`, '#c940ff');
+      showToast(`Copycat: mimicked ${lastAb} for -${dmg}`);
+      if (target.hp <= 0) { finishKill(`Copycat → -${dmg}`, target); return true; }
+      finish(`Copycat → -${dmg}`);
+    } else { showToast('Nothing to copy yet'); }
+    return true;
+  }
+
+  if (name === 'Identity Theft') {
+    if (!target) { showToast('No target'); return true; }
+    const sAtk = target.unit.stats.atk, sDef = target.unit.stats.def;
+    applyStatus(u, 'atk_buff', 2, Math.max(0, sAtk - u.unit.stats.atk));
+    applyStatus(u, 'def_buff', 2, Math.max(0, sDef - u.unit.stats.def));
+    applyStatus(target, 'atk_down', 2, Math.floor(sAtk * 0.5));
+    applyStatus(target, 'def_down', 2, Math.floor(sDef * 0.5));
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) spawnFloater(tCell, '📋 STOLEN', '#c940ff');
+    if (uCell) spawnFloater(uCell, '📋 COPIED', '#c940ff');
+    showToast(`Identity Theft: borrowed ${target.unit.name}'s stats for 2 turns`);
+    finish('Identity Theft'); return true;
+  }
+
+  // ── NECRION ARRAY ─────────────────────────────────────────────────────────
+  if (name === 'Necrotic Claw') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    applyStatus(target, 'def_down', 2, 1);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#50ff8066'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} ☠`, '#50ff80'); } }, 200);
+    showToast(`Necrotic Claw: -${dmg}, DEF-1 for 2 turns`);
+    if (target.hp <= 0) { finishKill(`Necrotic Claw → -${dmg}`, target); return true; }
+    finish(`Necrotic Claw → -${dmg}`); return true;
+  }
+
+  if (name === 'Grave Pulse') {
+    const adj = b.cpuUnits.filter(e => Math.abs(e.row - u.row) + Math.abs(e.col - u.col) === 1);
+    if (!adj.length) { showToast('No adjacent enemies'); return true; }
+    adj.forEach(e => {
+      e.hp -= 8; applyStatus(e, 'ap_loss', 1, 1);
+      const ec = getCell(e.row, e.col);
+      if (ec) { spawnFloater(ec, '-8 ☠', '#50ff80'); flashCell(ec, '#50ff8066'); }
+    });
+    if (uCell) spawnFloater(uCell, '💀 PULSE', '#50ff80');
+    showToast(`Grave Pulse: 8 dmg + AP drain to ${adj.length} enemies`);
+    adj.filter(e => e.hp <= 0).forEach(e => setTimeout(() => handleEnemyDeath(e), 350));
+    finish(`Grave Pulse — ${adj.length} hit`); return true;
+  }
+
+  if (name === 'Death Grip') {
+    if (!target) { showToast('No target'); return true; }
+    pullUnitToward(target, u.row, u.col, b);
+    pullUnitToward(target, u.row, u.col, b);
+    target.hp -= 10;
+    applyStatus(target, 'stun', 1, 0);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    const nCell = getCell(target.row, target.col);
+    if (nCell) { spawnFloater(nCell, '-10 ⏸', '#50ff80'); flashCell(nCell, '#50ff8066'); shakeToken(nCell); }
+    showToast(`Death Grip: pulled ${target.unit.name} + stunned`);
+    if (target.hp <= 0) { finishKill('Death Grip', target); return true; }
+    finish('Death Grip'); return true;
+  }
+
+  if (name === 'Soul Drain') {
+    if (!target) { showToast('No target'); return true; }
+    const corrupted = hasStatus(target, 'corruption');
+    const drain = corrupted ? 20 : 14;
+    target.hp -= drain;
+    u.hp = Math.min(u.maxHp, u.hp + 12);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) { spawnFloater(tCell, `-${drain} DRAINED`, '#50ff80'); flashCell(tCell, '#50ff8066'); }
+    if (uCell) spawnFloater(uCell, '+12 HP', '#50ff80');
+    showToast(`Soul Drain: -${drain}${corrupted ? ' (Corruption bonus!)' : ''}, +12 HP self`);
+    if (target.hp <= 0) { finishKill(`Soul Drain → -${drain}`, target); return true; }
+    finish(`Soul Drain → -${drain}`); return true;
+  }
+
+  if (name === 'Blight Bolt') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    applyStatus(target, 'corruption', 3, 2);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#50ff8066'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} ☠`, '#50ff80'); } }, 200);
+    showToast(`Blight Bolt: -${dmg} + Corruption 3 turns`);
+    if (target.hp <= 0) { finishKill(`Blight Bolt → -${dmg}`, target); return true; }
+    finish(`Blight Bolt → -${dmg} + Corrupt`); return true;
+  }
+
+  if (name === 'Plague Nova') {
+    const corrupted = b.cpuUnits.filter(e => hasStatus(e, 'corruption'));
+    if (!corrupted.length) { showToast('No corrupted enemies to spread from'); return true; }
+    const spread = new Set();
+    corrupted.forEach(ce => b.cpuUnits.filter(e => e !== ce && Math.abs(e.row - ce.row) + Math.abs(e.col - ce.col) <= 2 && !hasStatus(e, 'corruption')).forEach(e => spread.add(e)));
+    spread.forEach(e => applyStatus(e, 'corruption', 3, 2));
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) { flashCell(tCell, '#50ff8066'); spawnFloater(tCell, `☠ PLAGUE ×${spread.size}`, '#50ff80'); }
+    showToast(`Plague Nova: corruption spread to ${spread.size} enemies`);
+    finish(`Plague Nova — ${spread.size} corrupted`); return true;
+  }
+
+  if (name === 'Death Cascade') {
+    if (!target) { showToast('No target'); return true; }
+    target.hp -= 12;
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#50ff8066'); shakeToken(tCell); spawnFloater(tCell, '-12', '#50ff80'); } }, 200);
+    if (target.hp <= 0) {
+      handleEnemyDeath(target);
+      const remaining = b.cpuUnits.filter(e => e !== target);
+      if (remaining.length) {
+        const chain = remaining.reduce((best, e) => Math.abs(e.row - u.row) + Math.abs(e.col - u.col) < Math.abs(best.row - u.row) + Math.abs(best.col - u.col) ? e : best, remaining[0]);
+        chain.hp -= 8;
+        const cc2 = getCell(chain.row, chain.col);
+        setTimeout(() => { if (cc2) { spawnFloater(cc2, '-8 CHAIN', '#50ff80'); flashCell(cc2, '#50ff8066'); } }, 450);
+        showToast(`Death Cascade: chained to ${chain.unit.name} for -8!`);
+        if (chain.hp <= 0) setTimeout(() => handleEnemyDeath(chain), 500);
+      }
+    } else { showToast('Death Cascade: -12 (no kill, no chain)'); }
+    finish('Death Cascade'); return true;
+  }
+
+  if (name === 'Rabid Bite') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    applyStatus(target, 'infection', 3, 0);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#50ff8066'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} 🦠`, '#50ff80'); } }, 200);
+    showToast(`Rabid Bite: -${dmg} + Infected (-1 ATK/-1 DEF, 3 turns)`);
+    if (target.hp <= 0) { finishKill(`Rabid Bite → -${dmg}`, target); return true; }
+    finish(`Rabid Bite → -${dmg} + Infected`); return true;
+  }
+
+  if (name === 'Pounce') {
+    if (!target) { showToast('No target'); return true; }
+    const dr = Math.sign(r - u.row), dc = Math.sign(c - u.col);
+    teleportUnit(u, Math.max(0, Math.min(7, r - dr)), Math.max(0, Math.min(7, c - dc)), b);
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 1, false);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#50ff8066'); shakeToken(tCell); spawnFloater(tCell, `-${dmg}`, '#50ff80'); } }, 200);
+    showToast(`Pounce: leaped to target, -${dmg}`);
+    if (target.hp <= 0) { finishKill(`Pounce → -${dmg}`, target); return true; }
+    finish(`Pounce → -${dmg}`); return true;
+  }
+
+  if (name === 'Feast') {
+    u.hp = u.maxHp;
+    applyStatus(u, 'atk_buff', 3, 2);
+    if (uCell) { spawnFloater(uCell, '🍖 FEAST!', '#50ff80'); flashCell(uCell, '#50ff8044'); }
+    showToast('Feast: fully healed + ATK+2 for 3 turns');
+    finish('Feast — full heal'); return true;
+  }
+
+  if (name === 'Necrotic Slam') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 3, false);
+    applyStatus(target, 'stun', 1, 0);
+    applyStatus(target, 'corruption', 3, 2);
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, '#50ff8088'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} ⏸☠`, '#50ff80'); } }, 200);
+    showToast(`Necrotic Slam: -${dmg} + Stunned + Corrupted`);
+    if (target.hp <= 0) { finishKill(`Necrotic Slam → -${dmg}`, target); return true; }
+    finish(`Necrotic Slam → -${dmg}`); return true;
+  }
+
+  if (name === 'Dark Aegis') {
+    applyStatus(u, 'def_buff', 2, 4);
+    const adjA = b.playerUnits.filter(p => p !== u && Math.abs(p.row - u.row) + Math.abs(p.col - u.col) === 1);
+    adjA.forEach(a => applyStatus(a, 'def_buff', 2, 4));
+    placeTileEffect(r, c, name, u.unit.faction, u.unit.stats.atk, 'player');
+    if (uCell) { spawnFloater(uCell, '🛡 AEGIS DEF+4', '#50ff80'); flashCell(uCell, '#50ff8044'); }
+    adjA.forEach(a => { const ac = getCell(a.row, a.col); if (ac) spawnFloater(ac, '🛡 DEF+4', '#50ff80'); });
+    showToast(`Dark Aegis: DEF+4 to self + ${adjA.length} adjacent allies`);
+    finish('Dark Aegis'); return true;
+  }
+
+  if (name === 'Entropy Field') {
+    const targets = enemiesInRadius(r, c, 3, b);
+    targets.forEach(e => { applyStatus(e, 'atk_down', 2, 2); applyStatus(e, 'def_down', 2, 2); });
+    placeTileEffect(r, c, name, u.unit.faction, u.unit.stats.atk, 'player');
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) { flashCell(tCell, '#50ff8066'); spawnFloater(tCell, `☠ ENTROPY ×${targets.length}`, '#50ff80'); }
+    showToast(`Entropy Field: -2 ATK/-2 DEF to ${targets.length} enemies for 2 turns`);
+    finish(`Entropy Field — ${targets.length} debuffed`); return true;
+  }
+
+  if (name === 'Oblivion Pulse') {
+    const targets = enemiesInRadius(r, c, 2, b);
+    if (!targets.length) { showToast('No enemies in range'); return true; }
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    const killed = dealAoeDamage(u, targets, u.unit.stats.atk + 2, false);
+    targets.filter(e => !killed.includes(e)).forEach(e => { applyStatus(e, 'corruption', 3, 2); applyStatus(e, 'corruption', 3, 2); });
+    showToast(`Oblivion Pulse: ${targets.length} hit + 2 Corruption stacks`);
+    killed.forEach(e => setTimeout(() => handleEnemyDeath(e), 400));
+    finish(`Oblivion Pulse — ${targets.length} hit`); return true;
+  }
+
+  if (name === 'Lava Slam') {
+    const dmg = target ? dealDamage(u, target, u.unit.stats.atk + 2, false) : 0;
+    placeTileEffect(r, c, name, u.unit.faction, u.unit.stats.atk, 'player');
+    if (uCell && tCell) vfxAbility(uCell, tCell, fc.color, name);
+    if (tCell) { flashCell(tCell, '#ff5c1a66'); spawnFloater(tCell, target ? `-${dmg} 🌋` : '🌋 LAVA', '#ff5c1a'); }
+    if (target) { setTimeout(() => { if (tCell) shakeToken(tCell); }, 200); }
+    showToast(target ? `Lava Slam: -${dmg} + molten terrain` : 'Lava Slam: molten terrain placed');
+    if (target && target.hp <= 0) { finishKill('Lava Slam', target); return true; }
+    finish('Lava Slam'); return true;
+  }
+
+  // ── VEX ORDER ─────────────────────────────────────────────────────────────
+  const VEX = '#f5c842';
+
+  if (name === 'Harmonic Strike') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    applyResonance(target, 1);
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, VEX+'55'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} ◎`, VEX); } }, 200);
+    showToast(`Harmonic Strike: -${dmg}, +1 Resonance (×${getResonanceStacks(target)})`);
+    if (target.hp <= 0) { finishKill(`Harmonic Strike → -${dmg}`, target); return true; }
+    finish(`Harmonic Strike → -${dmg}`); return true;
+  }
+
+  if (name === 'Shatter Pulse') {
+    if (!target) { showToast('No target'); return true; }
+    const stacks = getResonanceStacks(target);
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 2 + stacks * 4, false);
+    clearStatus(target, 'resonance');
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, VEX+'88'); shakeToken(tCell); spawnFloater(tCell, `-${dmg}${stacks ? ' 💥' : ''}`, VEX); } }, 200);
+    showToast(`Shatter Pulse: -${dmg}${stacks ? ` (${stacks} stacks consumed!)` : ''}`);
+    if (target.hp <= 0) { finishKill(`Shatter Pulse → -${dmg}`, target); return true; }
+    finish(`Shatter Pulse → -${dmg}`); return true;
+  }
+
+  if (name === 'Resonant Chain') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    const echoed = b.cpuUnits.filter(e => e !== target && Math.abs(e.row - r) + Math.abs(e.col - c) <= 2);
+    echoed.forEach(e => {
+      e.hp -= 7;
+      const ec = getCell(e.row, e.col);
+      if (ec) setTimeout(() => { spawnFloater(ec, '-7 ◎', VEX); flashCell(ec, VEX+'44'); }, 350);
+    });
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, VEX+'66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg}`, VEX); } }, 200);
+    showToast(`Resonant Chain: -${dmg} + echo 4 dmg to ${echoed.length} nearby`);
+    const killed = [target, ...echoed].filter(e => e.hp <= 0);
+    killed.forEach(e => setTimeout(() => { if (b.cpuUnits.includes(e)) handleEnemyDeath(e); }, 500));
+    finish(`Resonant Chain → -${dmg}, ${echoed.length} echoed`); return true;
+  }
+
+  if (name === 'Concussion Wave') {
+    const adj = b.cpuUnits.filter(e => Math.abs(e.row - u.row) + Math.abs(e.col - u.col) === 1);
+    if (!adj.length) { showToast('No adjacent enemies'); return true; }
+    adj.forEach(e => {
+      e.hp -= 7;
+      applyResonance(e, 1);
+      const ec = getCell(e.row, e.col);
+      if (ec) { spawnFloater(ec, '-7 ◎', VEX); flashCell(ec, VEX+'55'); }
+    });
+    if (uCell) spawnFloater(uCell, '◎ WAVE', VEX);
+    showToast(`Concussion Wave: 7 dmg + Resonance to ${adj.length} enemies`);
+    adj.filter(e => e.hp <= 0).forEach(e => setTimeout(() => handleEnemyDeath(e), 300));
+    finish(`Concussion Wave — ${adj.length} hit`); return true;
+  }
+
+  if (name === 'Silence') {
+    if (!target) { showToast('No target'); return true; }
+    applyStatus(target, 'silence', 2, 0);
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, VEX+'55'); spawnFloater(tCell, '🔇 SILENCE', VEX); } }, 200);
+    showToast(`Silence: ${target.unit.name} cannot use abilities for 2 turns`);
+    finish(`Silence → ${target.unit.name}`); return true;
+  }
+
+  if (name === 'Frequency Tap') {
+    if (!target) { showToast('No target'); return true; }
+    const hadStacks = getResonanceStacks(target) > 0;
+    applyResonance(target, 1);
+    if (hadStacks) {
+      const spread = b.cpuUnits.filter(e => e !== target && Math.abs(e.row - r) + Math.abs(e.col - c) <= 2);
+      spread.forEach(e => {
+        applyResonance(e, 1);
+        const ec = getCell(e.row, e.col);
+        if (ec) setTimeout(() => { spawnFloater(ec, '+1 ◎', VEX); flashCell(ec, VEX+'33'); }, 300);
+      });
+      showToast(`Frequency Tap: Resonance applied + spread to ${spread.length} nearby`);
+    } else {
+      showToast(`Frequency Tap: +1 Resonance to ${target.unit.name}`);
+    }
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    if (tCell) setTimeout(() => { spawnFloater(tCell, '+1 ◎', VEX); flashCell(tCell, VEX+'44'); }, 200);
+    finish(`Frequency Tap → ${target.unit.name}`); return true;
+  }
+
+  if (name === 'Sympathetic Resonance') {
+    if (!target) { showToast('No target'); return true; }
+    const srcStacks = getResonanceStacks(target);
+    if (srcStacks <= 0) { showToast('Target has no Resonance stacks'); return true; }
+    const spread = b.cpuUnits.filter(e => e !== target && Math.abs(e.row - r) + Math.abs(e.col - c) <= 2);
+    spread.forEach(e => {
+      applyResonance(e, srcStacks);
+      const ec = getCell(e.row, e.col);
+      if (ec) setTimeout(() => { spawnFloater(ec, `+${srcStacks} ◎`, VEX); flashCell(ec, VEX+'55'); }, 300);
+    });
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    if (tCell) setTimeout(() => { flashCell(tCell, VEX+'44'); spawnFloater(tCell, `◎×${srcStacks} COPIED`, VEX); }, 200);
+    showToast(`Sympathetic Resonance: ×${srcStacks} spread to ${spread.length} enemies`);
+    finish(`Sympathetic Resonance — ${spread.length} stacked`); return true;
+  }
+
+  if (name === 'Vex Chorus') {
+    const vexAllies = b.playerUnits.filter(p => p.unit.faction === 'vex' && Math.abs(p.row - u.row) + Math.abs(p.col - u.col) <= 3);
+    vexAllies.forEach(p => {
+      applyStatus(p, 'atk_buff', 2, 2);
+      const pc = getCell(p.row, p.col);
+      if (pc) spawnFloater(pc, '+2 ATK ◎', VEX);
+    });
+    if (uCell) { flashCell(uCell, VEX+'55'); spawnFloater(uCell, '◎ CHORUS', VEX); }
+    showToast(`Vex Chorus: +2 ATK to ${vexAllies.length} Vex allies for 2 turns`);
+    finish(`Vex Chorus — ${vexAllies.length} buffed`); return true;
+  }
+
+  if (name === 'Sonic Bolt') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    applyResonance(target, 1);
+    // Overtone passive: 3-stack splash
+    const stacks3 = getResonanceStacks(target);
+    if (stacks3 >= 3) {
+      const splash = b.cpuUnits.filter(e => e !== target && Math.abs(e.row - r) + Math.abs(e.col - c) <= 1);
+      splash.forEach(e => {
+        e.hp -= 4;
+        const ec = getCell(e.row, e.col);
+        if (ec) setTimeout(() => { spawnFloater(ec, '-4 ◎', VEX); flashCell(ec, VEX+'44'); }, 400);
+        if (e.hp <= 0) setTimeout(() => handleEnemyDeath(e), 500);
+      });
+    }
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, VEX+'55'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} ◎`, VEX); } }, 200);
+    showToast(`Sonic Bolt: -${dmg}, +1 Resonance (×${getResonanceStacks(target)})${stacks3 >= 3 ? ' — OVERTONE!' : ''}`);
+    if (target.hp <= 0) { finishKill(`Sonic Bolt → -${dmg}`, target); return true; }
+    finish(`Sonic Bolt → -${dmg}`); return true;
+  }
+
+  if (name === 'Fracture Scream') {
+    if (!target) { showToast('No target'); return true; }
+    const stacks = getResonanceStacks(target);
+    if (stacks < 2) { showToast(`Fracture Scream requires 2+ Resonance stacks (target has ${stacks})`); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 4, true); // ignores DEF
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, VEX+'99'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} SHATTER`, VEX); } }, 200);
+    showToast(`Fracture Scream: -${dmg} (ignores DEF, ×${stacks} stacks)`);
+    if (target.hp <= 0) { finishKill(`Fracture Scream → -${dmg}`, target); return true; }
+    finish(`Fracture Scream → -${dmg}`); return true;
+  }
+
+  if (name === 'Wavecrash') {
+    const targets = enemiesInRadius(u.row, u.col, 3, b);
+    if (!targets.length) { showToast('No enemies in range'); return true; }
+    targets.forEach(e => {
+      e.hp -= 10;
+      applyResonance(e, 1);
+      const ec = getCell(e.row, e.col);
+      if (ec) { spawnFloater(ec, '-10 ◎', VEX); flashCell(ec, VEX+'55'); shakeToken(ec); }
+    });
+    if (uCell) { spawnFloater(uCell, '◎ CRASH', VEX); flashCell(uCell, VEX+'33'); }
+    showToast(`Wavecrash: 10 dmg + Resonance to ${targets.length} enemies`);
+    targets.filter(e => e.hp <= 0).forEach(e => setTimeout(() => handleEnemyDeath(e), 400));
+    finish(`Wavecrash — ${targets.length} hit`); return true;
+  }
+
+  if (name === 'Silence Barrage') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk, false);
+    applyResonance(target, 1);
+    applyStatus(target, 'silence', 1, 0);
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, VEX+'66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} 🔇◎`, VEX); } }, 200);
+    showToast(`Silence Barrage: -${dmg}, +1 Resonance, Silenced 1 turn`);
+    if (target.hp <= 0) { finishKill(`Silence Barrage → -${dmg}`, target); return true; }
+    finish(`Silence Barrage → -${dmg}`); return true;
+  }
+
+  if (name === 'Null Chord') {
+    if (!target) { showToast('No target'); return true; }
+    const dmg = dealDamage(u, target, u.unit.stats.atk + 2, false);
+    applyResonance(target, 2);
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, VEX+'66'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} ◎◎`, VEX); } }, 200);
+    showToast(`Null Chord: -${dmg}, +2 Resonance (×${getResonanceStacks(target)})`);
+    if (target.hp <= 0) { finishKill(`Null Chord → -${dmg}`, target); return true; }
+    finish(`Null Chord → -${dmg}`); return true;
+  }
+
+  if (name === 'Resonant Bulwark') {
+    applyStatus(u, 'def_buff', 2, 5);
+    const vexAdj = b.playerUnits.filter(p => p !== u && p.unit.faction === 'vex' && Math.abs(p.row - u.row) + Math.abs(p.col - u.col) <= 1);
+    vexAdj.forEach(p => {
+      applyStatus(p, 'atk_buff', 1, 2);
+      const pc = getCell(p.row, p.col);
+      if (pc) spawnFloater(pc, '+2 ATK ◎', VEX);
+    });
+    if (uCell) { flashCell(uCell, VEX+'55'); spawnFloater(uCell, '+5 DEF ◎', VEX); }
+    showToast(`Resonant Bulwark: +5 DEF 2 turns${vexAdj.length ? `, +2 ATK to ${vexAdj.length} Vex allies` : ''}`);
+    finish('Resonant Bulwark'); return true;
+  }
+
+  if (name === 'Ground Pulse') {
+    const targets = enemiesInRadius(u.row, u.col, 2, b);
+    if (!targets.length) { showToast('No enemies in range'); return true; }
+    let totalHit = 0;
+    targets.forEach(e => {
+      const stacks = getResonanceStacks(e);
+      if (stacks <= 0) return;
+      const dmg = stacks * 5;
+      e.hp -= dmg;
+      totalHit++;
+      const ec = getCell(e.row, e.col);
+      if (ec) { spawnFloater(ec, `-${dmg} ◎`, VEX); flashCell(ec, VEX+'55'); shakeToken(ec); }
+      if (e.hp <= 0) setTimeout(() => handleEnemyDeath(e), 350);
+    });
+    if (uCell) { flashCell(uCell, VEX+'44'); spawnFloater(uCell, '◎ GROUND PULSE', VEX); }
+    showToast(`Ground Pulse: ${totalHit} enemies hit by resonance stacks`);
+    finish(`Ground Pulse — ${totalHit} hit`); return true;
+  }
+
+  if (name === 'Frequency Collapse') {
+    if (!target) { showToast('No target'); return true; }
+    const stacks = getResonanceStacks(target);
+    if (stacks <= 0) { showToast('Target has no Resonance stacks to collapse'); return true; }
+    clearStatus(target, 'resonance');
+    const dmg = Math.min(18, stacks * 6);
+    target.hp -= dmg;
+    if (uCell && tCell) vfxAbility(uCell, tCell, VEX, name);
+    setTimeout(() => { if (tCell) { flashCell(tCell, VEX+'99'); shakeToken(tCell); spawnFloater(tCell, `-${dmg} COLLAPSE`, VEX); } }, 200);
+    showToast(`Frequency Collapse: ×${stacks} stacks removed → -${dmg} dmg`);
+    if (target.hp <= 0) { finishKill(`Frequency Collapse → -${dmg}`, target); return true; }
+    finish(`Frequency Collapse → -${dmg}`); return true;
+  }
+
+  return false; // not handled — fall through to generic logic
+}
+
 function attemptAbility(r, c) {
   const b = gameState.battle, u = b.selectedUnit;
   const abilIdx = parseInt(b.actionMode.split(':')[1]);
   const ability = u.unit.abilities[abilIdx];
   if (!u||u.ap<ability.cost) { showToast('Insufficient AP'); return; }
+  // Stun check
+  if (hasStatus(u, 'stun')) { showToast(`${u.unit.name} is stunned!`); return; }
+  // Silence check — Vex Order: cannot use abilities while silenced
+  if (hasStatus(u, 'silence')) { showToast(`${u.unit.name} is silenced — abilities disabled!`); return; }
   const dist = Math.abs(r-u.row)+Math.abs(c-u.col);
   if (ability.range>0&&dist>ability.range) { showToast('Out of range'); return; }
+
+  // Ability-specific handling (returns true if fully handled)
+  if (handleSpecificAbility(ability, u, r, c, b)) return;
 
   let effectApplied = false;
   const target = b.cpuUnits.find(e=>e.row===r&&e.col===c);
@@ -1941,7 +3140,8 @@ function attemptAbility(r, c) {
   const tileAbils = ['Portal Throw','Causality Bomb','Rift Veil','Smoke Veil','Napalm Grenade',
     'Wildfire','Decoy Deploy','False Signal','Mirror Array','Swarm Call','Dark Aegis','Heat Shield',
     'Fuel Inject','Mass Confusion','Fractal Echo','Hallucinate','Reanimate','Gravity Well',
-    'Singularity','Inferno Wall','Time Stop','Time Fracture'];
+    'Singularity','Inferno Wall','Time Stop','Time Fracture',
+    'Concussion Wave','Wavecrash','Vex Chorus','Resonant Bulwark','Ground Pulse'];
 
   const isTileAbility = tileAbils.includes(ability.name) || ability.range === 0;
 
@@ -2043,27 +3243,35 @@ function renderSelectedUnitPanel(u) {
       <div class="sui-faction">${fc.glyph} ${fc.name}</div>
       <div class="sui-stats">
         <div class="sui-stat"><div class="sui-stat-val" style="color:${hpColor(u)}">${u.hp}/${u.maxHp}</div><div class="sui-stat-label">HP</div></div>
-        <div class="sui-stat"><div class="sui-stat-val">${u.unit.stats.atk}</div><div class="sui-stat-label">ATK</div></div>
-        <div class="sui-stat"><div class="sui-stat-val">${u.unit.stats.def}</div><div class="sui-stat-label">DEF</div></div>
+        <div class="sui-stat"><div class="sui-stat-val">${getEffectiveAtk(u)}</div><div class="sui-stat-label">ATK</div></div>
+        <div class="sui-stat"><div class="sui-stat-val">${getEffectiveDef(u)}</div><div class="sui-stat-label">DEF</div></div>
         <div class="sui-stat"><div class="sui-stat-val" style="color:${u.ap>0?'var(--gold)':'var(--red)'}">${u.ap}/2</div><div class="sui-stat-label">AP</div></div>
       </div>
+      ${(u.statusEffects||[]).length ? `<div style="margin-top:5px;flex-wrap:wrap;display:flex;gap:2px">${(u.statusEffects||[]).map(s=>statusBadgeHtml(s)).join('')}</div>` : ''}
     </div>
   `;
   const actionBtns = document.getElementById('unit-action-btns');
   actionBtns.innerHTML = '';
+  const stunned = hasStatus(u, 'stun');
   const moveBtn = document.createElement('button');
-  moveBtn.className='action-btn'; moveBtn.disabled=u.ap<1;
+  moveBtn.className='action-btn'; moveBtn.disabled=u.ap<1||stunned;
   moveBtn.innerHTML=`<span class="ab-name">⊹ Move</span><span class="ab-cost">1 AP</span>`;
   moveBtn.onclick=()=>{ gameState.battle.actionMode='move'; showMoveRange(u); showToast('Click a highlighted tile'); };
   actionBtns.appendChild(moveBtn);
   const atkBtn = document.createElement('button');
-  atkBtn.className='action-btn'; atkBtn.disabled=u.ap<1;
+  atkBtn.className='action-btn'; atkBtn.disabled=u.ap<1||stunned;
   atkBtn.innerHTML=`<span class="ab-name">⚡ Attack</span><span class="ab-cost">1 AP</span>`;
   atkBtn.onclick=()=>{ gameState.battle.actionMode='attack'; showAttackRange(u); showToast('Target an enemy'); };
   actionBtns.appendChild(atkBtn);
+  if (stunned) {
+    const stDiv = document.createElement('div');
+    stDiv.style.cssText = 'font-family:Share Tech Mono,monospace;font-size:9px;color:var(--cyan);padding:4px;text-align:center;letter-spacing:0.1em';
+    stDiv.textContent = '⏸ STUNNED — CANNOT ACT';
+    actionBtns.appendChild(stDiv);
+  }
   u.unit.abilities.forEach((ab, i) => {
     const btn = document.createElement('button');
-    btn.className='action-btn'; btn.disabled=u.ap<ab.cost;
+    btn.className='action-btn'; btn.disabled=u.ap<ab.cost||stunned;
     btn.title=ab.desc;
     const fc2 = FACTIONS[u.unit.faction];
     btn.innerHTML=`<span class="ab-name" style="color:${fc2.color}">◈ ${ab.name}</span><span class="ab-cost">${ab.cost} AP</span>`;
@@ -2167,13 +3375,17 @@ function runCpuTurn() {
 function aiDist(a, b) { return Math.abs(a.row - b.row) + Math.abs(a.col - b.col); }
 
 function aiCalcDamage(attacker, defender) {
-  const raw = attacker.unit.stats.atk - Math.floor(defender.unit.stats.def * 0.5);
-  return Math.max(Math.floor(attacker.unit.stats.atk * 0.25), raw);
+  const atk = getEffectiveAtk(attacker);
+  const def = getEffectiveDef(defender);
+  const raw = atk - Math.floor(def * 0.5);
+  return Math.max(Math.floor(atk * 0.25), raw);
 }
 
 function aiCalcAbilDamage(attacker, defender) {
-  const raw = (attacker.unit.stats.atk + 8) - Math.floor(defender.unit.stats.def * 0.5);
-  return Math.max(Math.floor((attacker.unit.stats.atk + 8) * 0.3), raw);
+  const atk = getEffectiveAtk(attacker) + 8;
+  const def = getEffectiveDef(defender);
+  const raw = atk - Math.floor(def * 0.5);
+  return Math.max(Math.floor(atk * 0.3), raw);
 }
 
 function aiDoAttack(u, target, b) {
@@ -2278,6 +3490,7 @@ const AI_ABILITY_ROLES = {
     'Lava Slam',
     'Mind Stab','Psi Shatter','Phantom Strike',
     'Phase Through','Haunt',
+    'Harmonic Strike','Shatter Pulse','Resonant Chain','Sonic Bolt','Fracture Scream','Null Chord','Frequency Collapse','Silence Barrage',
     'Mental Barrage',
     'Necrotic Claw','Grave Pulse','Death Grip','Soul Drain',
     'Blight Bolt','Plague Nova','Death Cascade',
@@ -2290,11 +3503,11 @@ const AI_ABILITY_ROLES = {
   // Heal — restore HP to self or ally
   HEAL: ['Rewind','Time Echo','Fuel Inject'],
   // Control — debuff / disable enemies
-  CONTROL: ['Time Stop','Singularity','Mass Confusion','Hallucinate','Death Grip'],
+  CONTROL: ['Time Stop','Singularity','Mass Confusion','Hallucinate','Death Grip','Silence','Silence Barrage'],
   // Terrain — place a lasting field effect
   TERRAIN: ['Gravity Well','Inferno Wall','Napalm Grenade','Wildfire','Rift Veil','Lava Slam','Smoke Veil','Causality Bomb','Time Fracture','Swarm Call','Entropy Field','Heat Shield','Dark Aegis','Decoy Deploy','False Signal'],
   // Support — buff allies or utility
-  SUPPORT: ['Dark Aegis','Heat Shield','Mirror Array','Veil Shroud','Reanimate','Fractal Echo'],
+  SUPPORT: ['Dark Aegis','Heat Shield','Mirror Array','Veil Shroud','Reanimate','Fractal Echo','Vex Chorus','Resonant Bulwark','Frequency Tap','Sympathetic Resonance','Wavecrash','Concussion Wave','Ground Pulse'],
 };
 
 function aiAbilityRole(name) {
@@ -2314,6 +3527,29 @@ function aiFireAbility(u, ab, target, b, extraLog) {
     vfxAbility(uc, tc, color, ab.name);
     setTimeout(() => { flashCell(tc, color+'88'); shakeToken(tc); spawnFloater(tc, `-${dmg}`, color); }, 260);
   }
+  // Apply secondary status effects for CPU abilities
+  const aiStatusMap = {
+    'Flame Strike':      () => applyStatus(target, 'burn', 3, 2),
+    'Core Breach':       () => applyStatus(target, 'burn', 3, 2),
+    'Plasma Bolt':       () => applyStatus(target, 'burn', 3, 2),
+    'Entropy Bolt':      () => applyStatus(target, 'ap_loss', 1, 1),
+    'Blight Bolt':       () => applyStatus(target, 'corruption', 3, 2),
+    'Necrotic Claw':     () => applyStatus(target, 'def_down', 2, 1),
+    'Necrotic Slam':     () => { applyStatus(target, 'stun', 1, 0); applyStatus(target, 'corruption', 3, 2); },
+    'Rabid Bite':        () => applyStatus(target, 'infection', 3, 0),
+    'Time Stop':         () => applyStatus(target, 'stun', 2, 0),
+    'Mind Stab':         () => applyStatus(target, 'confusion', 1, 0),
+    'Psi Shatter':       () => applyStatus(target, 'stun', 1, 0),
+    // Vex Order
+    'Harmonic Strike':   () => applyResonance(target, 1),
+    'Sonic Bolt':        () => applyResonance(target, 1),
+    'Null Chord':        () => applyResonance(target, 2),
+    'Silence':           () => applyStatus(target, 'silence', 2, 0),
+    'Silence Barrage':   () => { applyResonance(target, 1); applyStatus(target, 'silence', 1, 0); },
+    'Shatter Pulse':     () => clearStatus(target, 'resonance'),
+    'Frequency Collapse':() => clearStatus(target, 'resonance'),
+  };
+  if (aiStatusMap[ab.name] && target.hp > 0) aiStatusMap[ab.name]();
   const suffix = extraLog || (target.hp <= 0 ? ' — TERMINATED' : `: -${dmg}`);
   addTimelineEntry('enemy', `${u.unit.name} → ${ab.name}${suffix}`, 'ability');
   if (target.hp <= 0) setTimeout(() => handlePlayerDeath(target), 340);
@@ -2481,6 +3717,8 @@ function aiEvaluateAbilities(u, b, diff) {
 // ── EASY AI ────────────────────────────────────────────────────────────────
 // Random targets, frequent inaction, no abilities, sometimes wanders away
 function aiActEasy(u, b) {
+  // Stunned units skip their turn
+  if (hasStatus(u, 'stun')) { addTimelineEntry('enemy', `${u.unit.name} is stunned`, 'move'); return; }
   // 40% chance to skip the whole turn
   if (Math.random() < 0.4) {
     addTimelineEntry('enemy', `${u.unit.name} idles`, 'move');
@@ -2517,6 +3755,7 @@ function aiActEasy(u, b) {
 // ── NORMAL AI ─────────────────────────────────────────────────────────────
 // Targets weakest player, moves efficiently, occasionally uses 1 ability per turn
 function aiActNormal(u, b) {
+  if (hasStatus(u, 'stun')) { addTimelineEntry('enemy', `${u.unit.name} is stunned`, 'move'); return; }
   const hpPct = u.hp / u.maxHp;
 
   // Retreat if critically low HP (< 20%) and there are other CPU allies
@@ -2554,6 +3793,7 @@ function aiActNormal(u, b) {
 // ── HARD AI ───────────────────────────────────────────────────────────────
 // Full evaluation: focus-fire, flanking, ability usage, coordination, kiting
 function aiActHard(u, b) {
+  if (hasStatus(u, 'stun')) { addTimelineEntry('enemy', `${u.unit.name} is stunned`, 'move'); return; }
   const diff = gameState.options.diff;
   const hpPct = u.hp / u.maxHp;
   const color = FACTIONS[u.unit.faction].color;
