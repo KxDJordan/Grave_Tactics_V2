@@ -1073,11 +1073,20 @@ const TILE_EFFECT_DEFS = {
 };
 
 // Place a tile effect into the game state and render it
-function placeTileEffect(r, c, abilityName, casterFaction, casterAtk, casterSide) {
+function placeTileEffect(r, c, abilityName, casterFaction, casterAtk, casterSide, _singleCell) {
   const b = gameState.battle;
   if (!b) return;
   const def = TILE_EFFECT_DEFS[abilityName];
   if (!def) return;
+
+  // Rift Veil occupies a 3x1 horizontal zone
+  if (abilityName === 'Rift Veil' && !_singleCell) {
+    for (let dc = -1; dc <= 1; dc++) {
+      const nc = c + dc;
+      if (nc >= 0 && nc < 8) placeTileEffect(r, nc, abilityName, casterFaction, casterAtk, casterSide, true);
+    }
+    return;
+  }
 
   // Remove any existing effect on same tile from same source
   b.tileEffects = b.tileEffects.filter(e => !(e.r === r && e.c === c && e.name === abilityName));
@@ -2099,7 +2108,7 @@ function renderTimeline() {
   });
 }
 
-function endPlayerTurn() {
+function _endPlayerTurnBase() {
   const b = gameState.battle;
   clearSelection(); b.phase='cpu';
   b.playerUnits.forEach(u=>{ u.ap=2; });
@@ -3026,7 +3035,6 @@ function applyOnlineAction(action) {
 }
 
 // Patch endPlayerTurn to broadcast when online
-const _origEndPlayerTurn = endPlayerTurn;
 function endPlayerTurn() {
   const b = gameState.battle;
   if (b?.online) {
@@ -3039,6 +3047,6 @@ function endPlayerTurn() {
     showToast("Opponent's turn…", 2000);
     return;
   }
-  _origEndPlayerTurn();
+  _endPlayerTurnBase();
 }
 
