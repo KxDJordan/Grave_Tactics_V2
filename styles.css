@@ -107,7 +107,7 @@ body {
   border: 1px solid var(--border2); color: var(--text);
   font-family: 'Orbitron', sans-serif; font-size: 12px; letter-spacing: 0.15em;
   padding: 15px 32px; cursor: pointer; text-transform: uppercase;
-  position: relative; overflow: hidden; transition: all 0.2s;
+  position: relative; overflow: hidden; transition: all 0.2s; /* mobile: #battle-screen overrides overflow via media query */
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
 }
 .menu-btn::before {
@@ -541,6 +541,29 @@ body {
 
 
 
+
+/* Causality Bomb countdown glow */
+.tile-effect.bomb-last-turn {
+  animation: bombCountdown 0.45s ease-in-out infinite alternate !important;
+}
+@keyframes bombCountdown {
+  0%   { box-shadow: inset 0 0 14px rgba(0,229,255,0.6), 0 0 18px rgba(0,229,255,0.7); opacity: 0.9; }
+  100% { box-shadow: inset 0 0 28px rgba(0,229,255,1.0), 0 0 32px rgba(0,229,255,1.0); opacity: 1.0; }
+}
+/* Detonation shockwave ring (spawned dynamically) */
+.bomb-shockwave {
+  position: absolute; border-radius: 50%; pointer-events: none; z-index: 36;
+  border: 2px solid #00e5ff;
+  transform: translate(-50%,-50%) scale(0);
+  box-shadow: 0 0 12px #00e5ff, inset 0 0 8px rgba(0,229,255,0.4);
+  animation: bombShockwave 0.7s cubic-bezier(0.1,0.7,0.4,1) forwards;
+}
+@keyframes bombShockwave {
+  0%   { transform: translate(-50%,-50%) scale(0);   opacity: 1; }
+  60%  { transform: translate(-50%,-50%) scale(2.4); opacity: 0.8; }
+  100% { transform: translate(-50%,-50%) scale(4.0); opacity: 0; }
+}
+
 /* ─── Online Lobby ─── */
 #lobby-screen { background: var(--bg); }
 .lobby-mode-btn {
@@ -666,3 +689,136 @@ body {
 .token-flame { border-color: var(--fire) !important; box-shadow: 0 0 10px rgba(255,92,26,0.4) !important; background: rgba(120,30,0,0.3) !important; }
 .token-illusion { border-color: var(--illusion) !important; box-shadow: 0 0 10px rgba(201,64,255,0.4) !important; background: rgba(60,0,100,0.3) !important; }
 .token-undead { border-color: var(--undead) !important; box-shadow: 0 0 10px rgba(80,255,128,0.4) !important; background: rgba(0,60,30,0.3) !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE BATTLE LAYOUT  (≤ 768px)
+   The class `battle-active` is toggled on <body> by JS whenever
+   the battle screen is shown/hidden.  This lets us surgically
+   override the global  body{overflow:hidden}  and
+   .screen{height:100vh; overflow:hidden}  rules that would
+   otherwise block all scrolling.
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Unlock the clip chain ──────────────────────────────────────
+     body + html must allow scroll; .screen must not fix the height */
+  body.battle-active,
+  body.battle-active html {
+    overflow-x: hidden !important;
+    overflow-y: auto   !important;
+    height: auto       !important;
+  }
+
+  /* The screen element itself: let it grow with content */
+  body.battle-active #battle-screen {
+    height: auto        !important;
+    min-height: 100vh   !important;
+    overflow: visible   !important;
+    position: relative  !important;
+    display: flex       !important;
+    flex-direction: column !important;
+  }
+
+  /* ── Sticky header ──────────────────────────────────────────── */
+  body.battle-active #battle-screen .screen-header {
+    position: sticky  !important;
+    top: 0            !important;
+    z-index: 100      !important;
+    background: var(--bg) !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding: 6px 10px !important;
+    flex-shrink: 0    !important;
+  }
+  body.battle-active #battle-screen .screen-header h2 { font-size: 11px !important; }
+
+  /* ── Three-col → single-col stack ──────────────────────────── */
+  body.battle-active .battle-layout {
+    display: flex         !important;
+    flex-direction: column !important;
+    height: auto          !important;
+    overflow: visible     !important;
+    flex: none            !important;
+  }
+
+  /* ── Grid block: first in stack, horizontally scrollable ────── */
+  body.battle-active .grid-area {
+    order: 1                        !important;
+    height: auto                    !important;
+    overflow-x: auto                !important;
+    overflow-y: visible             !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 10px 8px               !important;
+    display: flex                   !important;
+    flex-direction: column          !important;
+    align-items: flex-start         !important;
+    justify-content: flex-start     !important;
+    /* remove the clip that hid VFX rings */
+    position: relative              !important;
+  }
+
+  /* Grid container must not shrink */
+  body.battle-active #game-grid { flex-shrink: 0 !important; }
+
+  /* Cell sizes: scale to screen width while staying tappable */
+  body.battle-active .grid-cell {
+    width:  calc((100vw - 32px) / 8) !important;
+    height: calc((100vw - 32px) / 8) !important;
+    min-width:  38px !important;
+    min-height: 38px !important;
+    max-width:  62px !important;
+    max-height: 62px !important;
+  }
+
+  body.battle-active .turn-banner {
+    font-size: 10px  !important;
+    margin-bottom: 8px !important;
+    white-space: nowrap !important;
+  }
+
+  /* ── Info panel: second in stack ────────────────────────────── */
+  body.battle-active .info-panel {
+    order: 2          !important;
+    height: auto      !important;
+    max-height: none  !important;
+    overflow-y: visible !important;
+    border-left: none !important;
+    border-top: 1px solid var(--border) !important;
+  }
+
+  /* End-turn button: thumb-friendly */
+  body.battle-active .end-turn-btn {
+    width: 100%    !important;
+    padding: 14px  !important;
+    font-size: 15px !important;
+    margin-top: 6px !important;
+  }
+
+  body.battle-active #player-reserves { flex-wrap: wrap !important; }
+
+  /* ── Timeline: third, capped so it doesn't swamp the page ───── */
+  body.battle-active .timeline-panel {
+    order: 3          !important;
+    height: auto      !important;
+    max-height: 200px !important;
+    overflow-y: auto  !important;
+    border-right: none !important;
+    border-top: 1px solid var(--border) !important;
+  }
+
+  /* ── VFX canvas follows the grid ────────────────────────────── */
+  body.battle-active #vfx-canvas {
+    position: absolute  !important;
+    pointer-events: none !important;
+  }
+
+  /* ── Tile tooltip: pin to bottom of viewport ─────────────────── */
+  body.battle-active #tile-tooltip {
+    position: fixed !important;
+    bottom: 8px     !important;
+    left:   8px     !important;
+    right:  8px     !important;
+    top:    auto    !important;
+    max-width: none !important;
+  }
+}
+

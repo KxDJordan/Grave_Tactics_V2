@@ -552,6 +552,10 @@ let gameState = {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  // Mobile: toggle body class so battle screen can scroll freely
+  document.body.classList.toggle('battle-active', id === 'battle-screen');
+  // Restore scroll position to top when entering battle
+  if (id === 'battle-screen') window.scrollTo(0, 0);
 }
 
 function showToast(msg, duration = 2500) {
@@ -1069,7 +1073,7 @@ const TILE_EFFECT_DEFS = {
 };
 
 // Place a tile effect into the game state and render it
-function placeTileEffect(r, c, abilityName, casterFaction) {
+function placeTileEffect(r, c, abilityName, casterFaction, casterAtk, casterSide) {
   const b = gameState.battle;
   if (!b) return;
   const def = TILE_EFFECT_DEFS[abilityName];
@@ -1087,6 +1091,8 @@ function placeTileEffect(r, c, abilityName, casterFaction) {
     desc: def.desc,
     turnsLeft: def.turns,
     faction: casterFaction,
+    casterAtk: casterAtk || 0,
+    casterSide: casterSide || 'player',
   };
   b.tileEffects.push(effect);
   renderTileEffect(effect);
@@ -1119,6 +1125,9 @@ function renderTileEffect(effect) {
   el.addEventListener('mousemove',  (e) => moveTileTooltip(e));
   el.addEventListener('mouseleave', () => hideTileTooltip());
 
+  // Causality Bomb always shows countdown pulse (turnsLeft=1 from start)
+  if (effect.name === 'Causality Bomb') el.classList.add('bomb-last-turn');
+
   cell.appendChild(el);
 }
 
@@ -1135,21 +1144,169 @@ function renderAllTileEffects() {
 function tickTileEffects() {
   const b = gameState.battle;
   if (!b) return;
+
+  // Decrement all effects
   b.tileEffects.forEach(e => { e.turnsLeft--; });
+
+  // Separate detonating bombs from other expired effects
   const expired = b.tileEffects.filter(e => e.turnsLeft <= 0);
   expired.forEach(e => {
-    const cell = getCell(e.r, e.c);
-    if (cell) {
-      // Dissolve FX
-      const el = cell.querySelector(`[data-effect-id="${e.id}"]`);
-      if (el) { el.style.animation = 'none'; el.style.transition = 'opacity 0.4s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 400); }
-      if (gameState.options.anim) {
-        flashCell(cell, e.color + '44');
-        spawnFloater(cell, e.icon + ' EXPIRED', e.color);
+    if (e.name === 'Causality Bomb') {
+      detonateCausalityBomb(e);
+    } else {
+      // Generic dissolve for non-bomb effects
+      const cell = getCell(e.r, e.c);
+      if (cell) {
+        const el = cell.querySelector(`[data-effect-id="${e.id}"]`);
+        if (el) {
+          el.style.animation = 'none';
+          el.style.transition = 'opacity 0.4s';
+          el.style.opacity = '0';
+          setTimeout(() => el.remove(), 400);
+        }
+        if (gameState.options.anim) {
+          flashCell(cell, e.color + '44');
+          spawnFloater(cell, e.icon + ' EXPIRED', e.color);
+        }
       }
     }
   });
+
   b.tileEffects = b.tileEffects.filter(e => e.turnsLeft > 0);
+
+  // Mark any bombs on their last turn with countdown CSS
+  b.tileEffects.forEach(e => {
+    if (e.name === 'Causality Bomb') {
+      const cell = getCell(e.r, e.c);
+      const el = cell?.querySelector(`[data-effect-id="${e.id}"]`);
+      if (el && e.turnsLeft === 1) el.classList.add('bomb-last-turn');
+    }
+  });
+}
+
+// ── Causality Bomb detonation ─────────────────────────────────────────────
+function detonateCausalityBomb(effect) {
+  const b = gameState.battle;
+  const cell = getCell(effect.r, effect.c);
+  const color = '#00e5ff';
+
+  // Remove tile overlay immediately
+  if (cell) {
+    const el = cell.querySelector(`[data-effect-id="${effect.id}"]`);
+    if (el) el.remove();
+  }
+
+  // Damage = casterAtk + 3 (per description: "ATK+3 in 1-tile radius")
+  const baseDmg = (effect.casterAtk || 20) + 3;
+
+  // Collect all units in 1-tile Manhattan radius of the bomb
+  const allUnits = [...b.playerUnits, ...b.cpuUnits];
+  const inBlast  = allUnits.filter(u =>
+    Math.abs(u.row - effect.r) + Math.abs(u.col - effect.c) <= 1
+  );
+
+  // ── VFX: shockwave rings + screen flash ───────────────────────────────
+  if (gameState.options.anim) {
+    const vfxDiv = document.getElementById('battle-vfx');
+    if (vfxDiv && cell) {
+      const rect   = cell.getBoundingClientRect();
+      const parent = document.getElementById('game-grid').getBoundingClientRect();
+      const cx = rect.left - parent.left + rect.width  / 2;
+      const cy = rect.top  - parent.top  + rect.height / 2;
+
+      // 3 staggered shockwave rings
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const ring = document.createElement('div');
+          const sz = 20 + i * 14;
+          ring.className = 'bomb-shockwave';
+          ring.style.cssText = `width:${sz}px;height:${sz}px;left:${cx}px;top:${cy}px;animation-delay:${i*0.08}s`;
+          vfxDiv.appendChild(ring);
+          setTimeout(() => ring.remove(), 900);
+        }, i * 80);
+      }
+    }
+
+    // Canvas: bright burst at bomb center + AoE particle spray
+    if (vfxCanvas) {
+      const from = { x: 0, y: 0 };
+      if (cell) {
+        const r2 = cell.getBoundingClientRect();
+        const g2 = document.getElementById('game-grid').getBoundingClientRect();
+        from.x = r2.left - g2.left + r2.width / 2;
+        from.y = r2.top  - g2.top  + r2.height / 2;
+      }
+      // Core explosion burst
+      for (let i = 0; i < 55; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2.5 + Math.random() * 6;
+        vfxParticles.push({
+          x: from.x, y: from.y,
+          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+          size: 2 + Math.random() * 3.5,
+          color: i % 4 === 0 ? '#ffffff' : color,
+          life: 1, decay: 0.022, shrink: 0.94, gravity: 0.04, glow: true,
+        });
+      }
+      // Expanding rings
+      for (let i = 0; i < 4; i++) {
+        setTimeout(() => {
+          vfxParticles.push({
+            type: 'ring', x: from.x, y: from.y, vx: 0, vy: 0,
+            size: 6 + i * 8, color, life: 1, decay: 0.045 + i * 0.01, lineWidth: 2.5, expand: 4,
+          });
+        }, i * 70);
+      }
+    }
+
+    // Screen flash
+    const sf = document.createElement('div');
+    sf.className = 'screen-flash';
+    sf.style.background = 'rgba(0,229,255,0.35)';
+    document.body.appendChild(sf);
+    setTimeout(() => sf.remove(), 400);
+
+    // Flash + shake every cell in blast radius
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (Math.abs(dr) + Math.abs(dc) > 1) continue;
+        const bc = getCell(effect.r + dr, effect.c + dc);
+        if (bc) {
+          setTimeout(() => {
+            flashCell(bc, color + '77');
+            shakeToken(bc);
+          }, 120);
+        }
+      }
+    }
+  }
+
+  // ── Apply damage ──────────────────────────────────────────────────────
+  const killed = [];
+  inBlast.forEach(u => {
+    // Reduce damage if target is far edge of radius (optional flavour — full dmg for now)
+    u.hp -= baseDmg;
+    const isPlayer = b.playerUnits.includes(u);
+    const tc = getCell(u.row, u.col);
+    setTimeout(() => {
+      if (tc) spawnFloater(tc, `-${baseDmg}`, color);
+    }, 200);
+    addTimelineEntry(
+      effect.casterSide === 'player' ? 'player' : 'enemy',
+      `Causality Bomb detonated — ${u.unit.name}: -${baseDmg}`,
+      'ability'
+    );
+    if (u.hp <= 0) killed.push({ u, isPlayer });
+  });
+
+  // Process kills after a short delay so VFX is visible
+  setTimeout(() => {
+    killed.forEach(({ u, isPlayer }) => {
+      if (isPlayer) handlePlayerDeath(u);
+      else handleEnemyDeath(u);
+    });
+    placeAllTokens(); updateFogOfWar(); checkVictory();
+  }, 450);
 }
 
 // ── Tooltip ───────────────────────────────────────────────────────────────
@@ -1191,15 +1348,21 @@ function initVfxCanvas() {
   if (!vfxCanvas) return;
   const grid = document.getElementById('game-grid');
   const r = grid.getBoundingClientRect();
-  vfxCanvas.width = r.width;
-  vfxCanvas.height = r.height;
+  vfxCanvas.width  = r.width  || 1;
+  vfxCanvas.height = r.height || 1;
   vfxCtx = vfxCanvas.getContext('2d');
-  // Keep canvas sized to grid
+  // Keep canvas sized to grid on resize AND scroll (mobile layout reflow)
   const resizeVfx = () => {
     const rr = document.getElementById('game-grid')?.getBoundingClientRect();
-    if (rr && vfxCanvas) { vfxCanvas.width = rr.width; vfxCanvas.height = rr.height; }
+    if (rr && vfxCanvas) {
+      vfxCanvas.width  = rr.width  || 1;
+      vfxCanvas.height = rr.height || 1;
+    }
   };
   window.addEventListener('resize', resizeVfx);
+  // On mobile the layout may reflow after the grid renders
+  setTimeout(resizeVfx, 200);
+  setTimeout(resizeVfx, 600);
   if (!vfxAnimating) { vfxAnimating = true; animVfx(); }
 }
 
@@ -1808,7 +1971,15 @@ function attemptAbility(r, c) {
       spawnFloater(tc, fc.glyph || '◈', fc.color);
     }
     // Place persistent tile effect if this ability creates terrain
-    placeTileEffect(r, c, ability.name, u.unit.faction);
+    placeTileEffect(r, c, ability.name, u.unit.faction, u.unit.stats.atk, 'player');
+    // Causality Bomb gets a special "ARMED" floater on placement
+    if (ability.name === 'Causality Bomb') {
+      const tc2 = getCell(r, c);
+      if (tc2) {
+        setTimeout(() => spawnFloater(tc2, '⚠ ARMED', '#00e5ff'), 300);
+        showToast(`Causality Bomb armed — detonates next turn for ATK+3 AoE!`, 3000);
+      }
+    }
 
     // Portal Throw: immediately enter "select ally to teleport" mode
     if (ability.name === 'Portal Throw') {
@@ -2149,7 +2320,7 @@ function aiFireTileAbility(u, ab, r, c, b) {
     flashCell(tc, color+'55');
     spawnFloater(tc, FACTIONS[u.unit.faction].glyph || '◈', color);
   }
-  placeTileEffect(r, c, ab.name, u.unit.faction);
+  placeTileEffect(r, c, ab.name, u.unit.faction, u.unit.stats.atk, 'cpu');
   addTimelineEntry('enemy', `${u.unit.name} deployed ${ab.name}`, 'ability');
   return true;
 }
@@ -2511,7 +2682,7 @@ function cycleDifficulty() {
 // ONLINE MODE — WebSocket Client
 // ============================================================
 // Replace this URL with your Cloudflare Worker WebSocket URL:
-const WS_URL = 'https://nexus-break-matchmaker.kevv-djordan.workers.dev/ws';
+const WS_URL = 'wss://YOUR_WORKER.YOUR_SUBDOMAIN.workers.dev/ws';
 
 let ws        = null;   // active WebSocket
 let onlineCtx = null;   // { role:'host'|'guest', roomId, myId, opponentId, pin? }
@@ -2837,7 +3008,7 @@ function applyOnlineAction(action) {
       } else if (action.tileR !== undefined) {
         const tc = getCell(action.tileR, action.tileC), uc = getCell(attacker.row, attacker.col);
         if (tc && uc) { vfxAbility(uc, tc, color, action.abilityName); flashCell(tc, color+'55'); }
-        placeTileEffect(action.tileR, action.tileC, action.abilityName, attacker.unit.faction);
+        placeTileEffect(action.tileR, action.tileC, action.abilityName, attacker.unit.faction, attacker.unit.stats.atk, 'cpu');
         addTimelineEntry('enemy', `${attacker.unit.name}: ${action.abilityName}`, 'ability');
         placeAllTokens(); updateFogOfWar();
       }
@@ -2870,3 +3041,4 @@ function endPlayerTurn() {
   }
   _origEndPlayerTurn();
 }
+
