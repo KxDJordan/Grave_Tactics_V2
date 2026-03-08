@@ -548,6 +548,29 @@ body {
 #battle-vfx { position: absolute; inset: 0; pointer-events: none; z-index: 30; overflow: hidden; }
 
 
+
+/* ─── Online Lobby ─── */
+#lobby-screen { background: var(--bg); }
+.lobby-mode-btn {
+  width: 280px; display: flex; flex-direction: column; align-items: center;
+  gap: 4px; padding: 14px 18px;
+}
+.lobby-mode-sub {
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  color: var(--text3); letter-spacing: 0.1em; font-weight: 400;
+}
+.lobby-pulse-ring {
+  width: 54px; height: 54px; border-radius: 50%;
+  border: 2px solid var(--cyan); margin: 0 auto;
+  box-shadow: 0 0 0 0 rgba(0,229,255,0.4);
+  animation: lobbyPulse 1.4s ease-in-out infinite;
+}
+@keyframes lobbyPulse {
+  0%   { box-shadow: 0 0 0 0   rgba(0,229,255,0.5); }
+  70%  { box-shadow: 0 0 0 20px rgba(0,229,255,0);  }
+  100% { box-shadow: 0 0 0 0   rgba(0,229,255,0);   }
+}
+
 /* ───── Persistent Tile Effects ───── */
 .tile-effect {
   position: absolute; inset: 0; pointer-events: all; z-index: 12;
@@ -672,7 +695,7 @@ body {
   <div class="menu-buttons">
     <button class="menu-btn primary" onclick="showScreen('army-screen');renderArmyScreen()">⬡ Manage Army</button>
     <button class="menu-btn" onclick="startBattle()">▸ VS CPU</button>
-    <button class="menu-btn" onclick="showToast('ONLINE MODE — OFFLINE')">◈ Online</button>
+    <button class="menu-btn" onclick="enterOnlineMode()">◈ Online</button>
     <button class="menu-btn" onclick="showScreen('options-screen')">◆ Options</button>
   </div>
 </div>
@@ -822,6 +845,72 @@ body {
       <div class="option-row"><span class="option-label">Grid Coordinates</span><button class="toggle-btn" id="opt-coords" onclick="toggleOption('coords')">OFF</button></div>
       <div class="option-row"><span class="option-label">HP Numbers</span><button class="toggle-btn on" id="opt-hp" onclick="toggleOption('hp')">ON</button></div>
     </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════ LOBBY SCREEN ═══════════════════════ -->
+<div id="lobby-screen" class="screen" style="flex-direction:column">
+  <div class="screen-header">
+    <button class="back-btn" onclick="leaveLobby()">◄ Back</button>
+    <h2>ONLINE MODE</h2>
+  </div>
+
+  <!-- MODE SELECTION -->
+  <div id="lobby-mode-select" style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;padding:24px">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.25em;color:var(--text3);margin-bottom:8px">SELECT MATCH TYPE</div>
+
+    <button class="menu-btn primary lobby-mode-btn" onclick="startCasualMatch()">
+      <span style="font-size:18px">⬡</span>
+      <span>Casual Match</span>
+      <span class="lobby-mode-sub">Auto-match with a waiting opponent</span>
+    </button>
+
+    <button class="menu-btn lobby-mode-btn" onclick="hostPrivateMatch()">
+      <span style="font-size:18px">◎</span>
+      <span>Host Private</span>
+      <span class="lobby-mode-sub">Generate a PIN — share with a friend</span>
+    </button>
+
+    <button class="menu-btn lobby-mode-btn" onclick="showJoinPrivate()">
+      <span style="font-size:18px">◈</span>
+      <span>Join Private</span>
+      <span class="lobby-mode-sub">Enter a host's PIN to join their match</span>
+    </button>
+
+    <div id="lobby-status-msg" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);margin-top:8px;min-height:18px"></div>
+  </div>
+
+  <!-- WAITING / PIN PANEL -->
+  <div id="lobby-waiting-panel" style="display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:20px;padding:24px">
+    <div id="lobby-pin-display" style="display:none;text-align:center">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.3em;color:var(--text3);margin-bottom:6px">YOUR PIN</div>
+      <div id="lobby-pin-value" style="font-family:'Orbitron',sans-serif;font-size:42px;color:var(--cyan);letter-spacing:0.2em;text-shadow:0 0 20px var(--cyan)">----</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);margin-top:6px">Share this with your opponent</div>
+    </div>
+
+    <div id="lobby-spinner" style="text-align:center">
+      <div class="lobby-pulse-ring"></div>
+      <div id="lobby-wait-text" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--cyan);margin-top:12px;letter-spacing:0.2em">SEARCHING FOR OPPONENT</div>
+    </div>
+
+    <button class="back-btn" style="margin-top:8px" onclick="cancelMatchmaking()">✕ Cancel</button>
+  </div>
+
+  <!-- JOIN PRIVATE PANEL -->
+  <div id="lobby-join-panel" style="display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;padding:24px">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.3em;color:var(--text3)">ENTER HOST PIN</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input id="pin-input" type="text" maxlength="4" placeholder="----"
+        style="font-family:'Orbitron',sans-serif;font-size:32px;width:120px;text-align:center;
+               background:transparent;border:1px solid var(--cyan);color:var(--cyan);
+               letter-spacing:0.3em;padding:8px;outline:none"
+        oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+        onkeydown="if(event.key==='Enter')joinPrivateMatch()">
+    </div>
+    <button class="menu-btn primary" onclick="joinPrivateMatch()">▸ Connect</button>
+    <div id="join-error-msg" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);min-height:16px"></div>
+    <button class="back-btn" onclick="showLobbyModeSelect()">◄ Back</button>
   </div>
 </div>
 
@@ -1706,11 +1795,28 @@ function confirmDeployment() {
 // ============================================================
 function initBattle() {
   const b = gameState.battle;
+  // BRUTAL mode: give all CPU units +15% ATK and +10% DEF
+  if (gameState.options.diff === 'BRUTAL') {
+    b.cpuUnits.forEach(u => {
+      if (!u._brutalBoosted) {
+        u.unit = Object.assign({}, u.unit, {
+          stats: {
+            ...u.unit.stats,
+            atk: Math.round(u.unit.stats.atk * 1.15),
+            def: Math.round(u.unit.stats.def * 1.10),
+          }
+        });
+        u._brutalBoosted = true;
+      }
+    });
+  }
   renderBattleGrid();
   renderPlayerCards();
   renderTimeline();
   renderReserves();
-  document.getElementById('turn-banner').innerHTML = `Your Turn <span id="turn-num">Turn ${b.turn}</span>`;
+  const diffLabel = gameState.options.diff || 'NORMAL';
+  const diffColors = { EASY:'#50ff80', NORMAL:'#00e5ff', HARD:'#ff9944', BRUTAL:'#ff3344' };
+  document.getElementById('turn-banner').innerHTML = `Your Turn <span id="turn-num">Turn ${b.turn}</span><span style="font-size:9px;letter-spacing:0.15em;margin-left:10px;color:${diffColors[diffLabel]};opacity:0.7">${diffLabel}</span>`;
   document.getElementById('turn-banner').className = 'turn-banner';
   document.getElementById('player-casualties').textContent = b.playerCasualties;
   document.getElementById('enemy-casualties').textContent = b.cpuCasualties;
@@ -2760,55 +2866,33 @@ function endPlayerTurn() {
   setTimeout(() => runCpuTurn(), 800);
 }
 
+
+// ============================================================
+// AI ENGINE  (difficulty-aware)
+// ============================================================
+/*
+  EASY   – random target selection, no abilities, random move direction, 40% chance to skip action
+  NORMAL – greedy nearest-weakest targeting, basic attack, occasional ability use (~30%), retreats when low HP
+  HARD   – full evaluation: focus-fires lowest-HP player, uses abilities intelligently, kites/flanks,
+           coordinates unit priorities, uses tile effects, retreats to heal when critical HP
+*/
+
 function runCpuTurn() {
   const b = gameState.battle;
+  const diff = gameState.options.diff || 'NORMAL';
   let delay = 0;
+
   b.cpuUnits.forEach(u => {
     u.ap = 2;
     if (b.playerUnits.length === 0) return;
     setTimeout(() => {
-      if (b.phase !== 'cpu') return;
-      let nearest = b.playerUnits.reduce((best, p) => {
-        const d = Math.abs(p.row-u.row)+Math.abs(p.col-u.col);
-        return d < Math.abs(best.row-u.row)+Math.abs(best.col-u.col) ? p : best;
-      }, b.playerUnits[0]);
-      const dist = Math.abs(nearest.row-u.row)+Math.abs(nearest.col-u.col);
-
-      if (dist <= 1 && u.ap >= 1) {
-        const rawCpuDmg = u.unit.stats.atk - Math.floor(nearest.unit.stats.def * 0.5);
-        const dmg = Math.max(Math.floor(u.unit.stats.atk * 0.25), rawCpuDmg);
-        nearest.hp -= dmg; u.ap--;
-        const tc = getCell(nearest.row, nearest.col);
-        if (tc) {
-          const cpuCell = getCell(u.row, u.col);
-          const cpuColor = FACTIONS[u.unit.faction].color;
-          vfxAttack(cpuCell, tc, cpuColor);
-          setTimeout(() => { flashCell(tc, cpuColor + '88'); shakeToken(tc); spawnFloater(tc, `-${dmg}`, cpuColor); }, 280);
-        }
-        addTimelineEntry('enemy', `${u.unit.name} → ${nearest.unit.name}: -${dmg}`, 'attack');
-        if (nearest.hp <= 0) { setTimeout(() => handlePlayerDeath(nearest), 320); }
-      } else if (u.ap >= 1) {
-        const mov = u.unit.stats.mov;
-        let bestRow=u.row, bestCol=u.col, bestDist=dist;
-        for (let dr=-mov;dr<=mov;dr++) for (let dc=-mov;dc<=mov;dc++) {
-          if (Math.abs(dr)+Math.abs(dc)>mov) continue;
-          const nr=u.row+dr, nc=u.col+dc;
-          if (nr<0||nr>=8||nc<0||nc>=8) continue;
-          const blocked = b.cpuUnits.some(e=>e!==u&&e.row===nr&&e.col===nc)||b.playerUnits.some(p=>p.row===nr&&p.col===nc);
-          if (blocked) continue;
-          const d = Math.abs(nearest.row-nr)+Math.abs(nearest.col-nc);
-          if (d<bestDist) { bestDist=d; bestRow=nr; bestCol=nc; }
-        }
-        if (bestRow!==u.row||bestCol!==u.col) {
-          const prevCell = getCell(u.row, u.col);
-          u.row=bestRow; u.col=bestCol; u.ap--;
-          if (prevCell) vfxWarpSpawn(prevCell, FACTIONS[u.unit.faction].color + '80' );
-          addTimelineEntry('enemy', `${u.unit.name} advances`, 'move');
-        }
-      }
+      if (b.phase !== 'cpu' || b.playerUnits.length === 0) return;
+      if      (diff === 'EASY')   aiActEasy(u, b);
+      else if (diff === 'NORMAL') aiActNormal(u, b);
+      else                        aiActHard(u, b); // HARD + BRUTAL both use hard AI; BRUTAL gets bonus stats below
       placeAllTokens(); updateFogOfWar(); checkVictory();
     }, delay);
-    delay += 500;
+    delay += 600;
   });
 
   setTimeout(() => {
@@ -2823,6 +2907,489 @@ function runCpuTurn() {
     placeAllTokens(); updateFogOfWar();
   }, delay + 400);
 }
+
+// ── Shared helpers ─────────────────────────────────────────────────────────
+
+function aiDist(a, b) { return Math.abs(a.row - b.row) + Math.abs(a.col - b.col); }
+
+function aiCalcDamage(attacker, defender) {
+  const raw = attacker.unit.stats.atk - Math.floor(defender.unit.stats.def * 0.5);
+  return Math.max(Math.floor(attacker.unit.stats.atk * 0.25), raw);
+}
+
+function aiCalcAbilDamage(attacker, defender) {
+  const raw = (attacker.unit.stats.atk + 8) - Math.floor(defender.unit.stats.def * 0.5);
+  return Math.max(Math.floor((attacker.unit.stats.atk + 8) * 0.3), raw);
+}
+
+function aiDoAttack(u, target, b) {
+  if (u.ap < 1) return false;
+  const dmg = aiCalcDamage(u, target);
+  target.hp -= dmg; u.ap--;
+  const tc = getCell(target.row, target.col);
+  const uc = getCell(u.row, u.col);
+  if (tc && uc) {
+    const color = FACTIONS[u.unit.faction].color;
+    vfxAttack(uc, tc, color);
+    setTimeout(() => { flashCell(tc, color + '88'); shakeToken(tc); spawnFloater(tc, `-${dmg}`, color); }, 280);
+  }
+  addTimelineEntry('enemy', `${u.unit.name} → ${target.unit.name}: -${dmg}`, 'attack');
+  if (target.hp <= 0) setTimeout(() => handlePlayerDeath(target), 320);
+  return true;
+}
+
+// Move u toward destR,destC using its remaining MOV budget (consumes 1 AP)
+function aiMoveToward(u, destR, destC, b) {
+  if (u.ap < 1) return false;
+  const mov = u.unit.stats.mov;
+  let bestRow = u.row, bestCol = u.col, bestDist = aiDist(u, {row:destR,col:destC});
+  for (let dr = -mov; dr <= mov; dr++) {
+    for (let dc = -mov; dc <= mov; dc++) {
+      if (Math.abs(dr)+Math.abs(dc) > mov) continue;
+      const nr = u.row+dr, nc = u.col+dc;
+      if (nr < 0||nr >= 8||nc < 0||nc >= 8) continue;
+      const blocked = b.cpuUnits.some(e=>e!==u&&e.row===nr&&e.col===nc)
+                    || b.playerUnits.some(p=>p.row===nr&&p.col===nc);
+      if (blocked) continue;
+      const d = Math.abs(destR-nr)+Math.abs(destC-nc);
+      if (d < bestDist) { bestDist = d; bestRow = nr; bestCol = nc; }
+    }
+  }
+  if (bestRow !== u.row || bestCol !== u.col) {
+    const prevCell = getCell(u.row, u.col);
+    u.row = bestRow; u.col = bestCol; u.ap--;
+    if (prevCell) vfxWarpSpawn(prevCell, FACTIONS[u.unit.faction].color + '80');
+    addTimelineEntry('enemy', `${u.unit.name} advances`, 'move');
+    return true;
+  }
+  return false;
+}
+
+// Move u AWAY from destR,destC (retreat/kite)
+function aiMoveAway(u, fromR, fromC, b) {
+  if (u.ap < 1) return false;
+  const mov = u.unit.stats.mov;
+  let bestRow = u.row, bestCol = u.col, bestDist = aiDist(u, {row:fromR,col:fromC});
+  for (let dr = -mov; dr <= mov; dr++) {
+    for (let dc = -mov; dc <= mov; dc++) {
+      if (Math.abs(dr)+Math.abs(dc) > mov) continue;
+      const nr = u.row+dr, nc = u.col+dc;
+      if (nr < 0||nr >= 8||nc < 0||nc >= 8) continue;
+      const blocked = b.cpuUnits.some(e=>e!==u&&e.row===nr&&e.col===nc)
+                    || b.playerUnits.some(p=>p.row===nr&&p.col===nc);
+      if (blocked) continue;
+      const d = Math.abs(fromR-nr)+Math.abs(fromC-nc);
+      if (d > bestDist) { bestDist = d; bestRow = nr; bestCol = nc; }
+    }
+  }
+  if (bestRow !== u.row || bestCol !== u.col) {
+    const prevCell = getCell(u.row, u.col);
+    u.row = bestRow; u.col = bestCol; u.ap--;
+    if (prevCell) vfxWarpSpawn(prevCell, FACTIONS[u.unit.faction].color + '60');
+    addTimelineEntry('enemy', `${u.unit.name} retreats`, 'move');
+    return true;
+  }
+  return false;
+}
+
+// Try to use one damaging ability against a player unit in range; returns true if fired
+
+// ============================================================
+// AI ABILITY SYSTEM
+// ============================================================
+/*
+  Each ability is classified into a role. The AI then evaluates
+  whether conditions are met for using that ability vs doing
+  something else. Difficulty controls WHEN abilities are used:
+    EASY   – never uses abilities
+    NORMAL – uses damage abilities opportunistically (~35%)
+             uses support abilities when clearly beneficial (~20%)
+    HARD   – evaluates full ability menu every action, picks
+             best-scoring option, uses control/terrain/support
+             with situational awareness
+    BRUTAL – same as HARD but with bonus stats already applied
+*/
+
+// ── Role catalogue ────────────────────────────────────────────────────────
+// Each entry: { role, condition(u,b,target?) -> bool, score(u,b,target?) -> number, execute(u,b,target?) }
+// Role tags used to classify abilities by name
+const AI_ABILITY_ROLES = {
+  // Direct damage — single target with range
+  DAMAGE: [
+    'Temporal Cut','Blink Strike','Paradox Slash',
+    'Chrono Beam','Epoch Burst',
+    'Flame Strike','Meltdown','Core Breach',
+    'Plasma Bolt','Ash Eruption','Solar Flare',
+    'Fire Dash','Detonation Protocol',
+    'Lava Slam',
+    'Mind Stab','Psi Shatter','Phantom Strike',
+    'Phase Through','Haunt',
+    'Mental Barrage',
+    'Necrotic Claw','Grave Pulse','Death Grip','Soul Drain',
+    'Blight Bolt','Plague Nova','Death Cascade',
+    'Rabid Bite','Pounce','Feast',
+    'Necrotic Slam','Oblivion Pulse','Entropy Bolt',
+    'Entropy Field',
+  ],
+  // Mobility — reposition self
+  MOBILITY: ['Void Step','Mirage Dash','Ignition Charge'],
+  // Heal — restore HP to self or ally
+  HEAL: ['Rewind','Time Echo','Fuel Inject'],
+  // Control — debuff / disable enemies
+  CONTROL: ['Time Stop','Singularity','Mass Confusion','Hallucinate','Death Grip'],
+  // Terrain — place a lasting field effect
+  TERRAIN: ['Gravity Well','Inferno Wall','Napalm Grenade','Wildfire','Rift Veil','Lava Slam','Smoke Veil','Causality Bomb','Time Fracture','Swarm Call','Entropy Field','Heat Shield','Dark Aegis','Decoy Deploy','False Signal'],
+  // Support — buff allies or utility
+  SUPPORT: ['Dark Aegis','Heat Shield','Mirror Array','Veil Shroud','Reanimate','Fractal Echo'],
+};
+
+function aiAbilityRole(name) {
+  for (const [role, list] of Object.entries(AI_ABILITY_ROLES)) {
+    if (list.includes(name)) return role;
+  }
+  return 'DAMAGE'; // default
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function aiFireAbility(u, ab, target, b, extraLog) {
+  const color = FACTIONS[u.unit.faction].color;
+  const dmg = aiCalcAbilDamage(u, target);
+  target.hp -= dmg; u.ap -= ab.cost;
+  const tc = getCell(target.row, target.col), uc = getCell(u.row, u.col);
+  if (tc && uc) {
+    vfxAbility(uc, tc, color, ab.name);
+    setTimeout(() => { flashCell(tc, color+'88'); shakeToken(tc); spawnFloater(tc, `-${dmg}`, color); }, 260);
+  }
+  const suffix = extraLog || (target.hp <= 0 ? ' — TERMINATED' : `: -${dmg}`);
+  addTimelineEntry('enemy', `${u.unit.name} → ${ab.name}${suffix}`, 'ability');
+  if (target.hp <= 0) setTimeout(() => handlePlayerDeath(target), 340);
+  return true;
+}
+
+function aiFireTileAbility(u, ab, r, c, b) {
+  const color = FACTIONS[u.unit.faction].color;
+  u.ap -= ab.cost;
+  const tc = getCell(r, c), uc = getCell(u.row, u.col);
+  if (tc && uc) {
+    vfxAbility(uc, tc, color, ab.name);
+    flashCell(tc, color+'55');
+    spawnFloater(tc, FACTIONS[u.unit.faction].glyph || '◈', color);
+  }
+  placeTileEffect(r, c, ab.name, u.unit.faction);
+  addTimelineEntry('enemy', `${u.unit.name} deployed ${ab.name}`, 'ability');
+  return true;
+}
+
+function aiFireHeal(u, ab, healTarget, b) {
+  const color = '#50ff80';
+  const heal = Math.floor(u.unit.stats.atk * 0.6 + 15);
+  healTarget.hp = Math.min(healTarget.maxHp, healTarget.hp + heal);
+  u.ap -= ab.cost;
+  const hc = getCell(healTarget.row, healTarget.col), uc = getCell(u.row, u.col);
+  if (hc && uc) { vfxAbility(uc, hc, color, ab.name); spawnFloater(hc, `+${heal}`, color); flashCell(hc, 'rgba(80,255,128,0.4)'); }
+  addTimelineEntry('enemy', `${u.unit.name} used ${ab.name}: +${heal} HP`, 'ability');
+  return true;
+}
+
+// ── Main ability evaluator ────────────────────────────────────────────────
+// Returns true if an ability was fired.
+// diff controls which roles are considered and how aggressively.
+function aiEvaluateAbilities(u, b, diff) {
+  if (u.ap < 1) return false;
+  const abilities = (u.unit.abilities || []).filter(ab => ab.cost <= u.ap);
+  if (!abilities.length) return false;
+
+  const hpPct = u.hp / u.maxHp;
+
+  // ── 1. HEAL: use when below HP threshold and heal ability available ──────
+  const healThresh = { NORMAL: 0.45, HARD: 0.55, BRUTAL: 0.60 };
+  if (hpPct < (healThresh[diff] || 0.45)) {
+    for (const ab of abilities) {
+      if (aiAbilityRole(ab.name) !== 'HEAL') continue;
+      return aiFireHeal(u, ab, u, b);
+    }
+  }
+  // Heal critically low ally (HARD/BRUTAL only)
+  if (diff !== 'NORMAL') {
+    const critAlly = b.cpuUnits.find(ally => ally !== u && ally.hp / ally.maxHp < 0.3 && aiDist(u, ally) <= 2);
+    if (critAlly) {
+      for (const ab of abilities) {
+        if (aiAbilityRole(ab.name) !== 'HEAL' || ab.range < aiDist(u, critAlly)) continue;
+        return aiFireHeal(u, ab, critAlly, b);
+      }
+    }
+  }
+
+  // ── 2. CONTROL: disable dangerous / high-HP player units ────────────────
+  if (diff === 'HARD' || diff === 'BRUTAL') {
+    for (const ab of abilities) {
+      if (aiAbilityRole(ab.name) !== 'CONTROL') continue;
+      // Target the highest-threat player unit in range
+      const controlTarget = b.playerUnits
+        .filter(p => aiDist(u, p) <= ab.range)
+        .sort((a, x) => x.unit.stats.atk - a.unit.stats.atk)[0];
+      if (controlTarget) {
+        // Use control if we can't kill the target with basic attacks this turn and they're dangerous
+        const canKill = aiDist(u, controlTarget) <= 1 && controlTarget.hp <= aiCalcDamage(u, controlTarget) * u.ap;
+        if (!canKill && controlTarget.unit.stats.atk > 25) {
+          return aiFireAbility(u, ab, controlTarget, b, ' — CONTROLLED');
+        }
+      }
+    }
+  }
+
+  // ── 3. TERRAIN: place field effects when strategically useful ────────────
+  if (diff === 'HARD' || diff === 'BRUTAL') {
+    for (const ab of abilities) {
+      if (aiAbilityRole(ab.name) !== 'TERRAIN') continue;
+      // Drop terrain between us and the nearest player cluster
+      const cluster = b.playerUnits.reduce((best, p) => aiDist(u,p) < aiDist(u,best) ? p : best, b.playerUnits[0]);
+      const dist = aiDist(u, cluster);
+      if (dist <= ab.range && ab.range >= 2) {
+        // Place at a tile between us and the cluster
+        const midR = Math.round((u.row + cluster.row) / 2);
+        const midC = Math.round((u.col + cluster.col) / 2);
+        if (midR >= 0 && midR < 8 && midC >= 0 && midC < 8) {
+          return aiFireTileAbility(u, ab, midR, midC, b);
+        }
+      }
+    }
+  }
+
+  // ── 4. MOBILITY: reposition aggressively if far from targets ────────────
+  if (diff === 'HARD' || diff === 'BRUTAL') {
+    for (const ab of abilities) {
+      if (aiAbilityRole(ab.name) !== 'MOBILITY') continue;
+      if (u.ap < ab.cost) continue;
+      const target = b.playerUnits.reduce((best, p) => aiDist(u,p) < aiDist(u,best) ? p : best, b.playerUnits[0]);
+      const dist = aiDist(u, target);
+      if (dist > 3 && ab.range >= 1) {
+        // Teleport adjacent to the target if possible
+        const teleR = Math.max(0, Math.min(7, target.row + (u.row < target.row ? -1 : 1)));
+        const teleC = Math.max(0, Math.min(7, target.col + (u.col < target.col ? -1 : 1)));
+        const occ = b.cpuUnits.some(e=>e!==u&&e.row===teleR&&e.col===teleC) || b.playerUnits.some(p=>p.row===teleR&&p.col===teleC);
+        if (!occ && ab.range >= dist - 1) {
+          const color = FACTIONS[u.unit.faction].color;
+          const from = getCell(u.row, u.col);
+          const to   = getCell(teleR, teleC);
+          if (from && to) vfxAbility(from, to, color, ab.name);
+          u.row = teleR; u.col = teleC; u.ap -= ab.cost;
+          setTimeout(() => { if (to) vfxWarpSpawn(to, color); }, 250);
+          addTimelineEntry('enemy', `${u.unit.name} used ${ab.name} — repositioned`, 'ability');
+          return true;
+        }
+      }
+    }
+  }
+
+  // ── 5. DAMAGE: score all in-range abilities vs all targets ───────────────
+  // NORMAL: only fire 35% of the time; HARD/BRUTAL: always pick best
+  if (diff === 'NORMAL' && Math.random() > 0.35) return false;
+
+  let bestAbil = null, bestTarget = null, bestScore = -Infinity;
+  for (const ab of abilities) {
+    const role = aiAbilityRole(ab.name);
+    if (role !== 'DAMAGE') continue;
+    if (ab.range < 1) continue;
+    for (const target of b.playerUnits) {
+      if (aiDist(u, target) > ab.range) continue;
+      const dmg = aiCalcAbilDamage(u, target);
+      // Score: kills first, then damage efficiency, then low-HP targets
+      const killBonus   = dmg >= target.hp ? 800 : 0;
+      const effBonus    = dmg / Math.max(1, ab.cost) * 10;
+      const lowHpBonus  = (target.maxHp - target.hp) * 0.5;
+      const rangePenalty = aiDist(u, target) * 2; // slightly prefer closer targets
+      const score = killBonus + effBonus + lowHpBonus - rangePenalty;
+      if (score > bestScore) { bestScore = score; bestAbil = ab; bestTarget = target; }
+    }
+  }
+
+  if (bestAbil && bestTarget) {
+    return aiFireAbility(u, bestAbil, bestTarget, b);
+  }
+
+  // ── 6. SUPPORT fallback (HARD/BRUTAL) ────────────────────────────────────
+  if (diff === 'HARD' || diff === 'BRUTAL') {
+    for (const ab of abilities) {
+      if (aiAbilityRole(ab.name) !== 'SUPPORT') continue;
+      // Use support if we have AP left over and allies are nearby
+      const nearbyAllies = b.cpuUnits.filter(a => a !== u && aiDist(u, a) <= 3).length;
+      if (nearbyAllies >= 1) {
+        return aiFireTileAbility(u, ab, u.row, u.col, b);
+      }
+    }
+  }
+
+  return false;
+}
+
+
+// ── EASY AI ────────────────────────────────────────────────────────────────
+// Random targets, frequent inaction, no abilities, sometimes wanders away
+function aiActEasy(u, b) {
+  // 40% chance to skip the whole turn
+  if (Math.random() < 0.4) {
+    addTimelineEntry('enemy', `${u.unit.name} idles`, 'move');
+    return;
+  }
+
+  // Pick a random player target (not necessarily nearest)
+  const targets = [...b.playerUnits];
+  const target = targets[Math.floor(Math.random() * targets.length)];
+  const dist = aiDist(u, target);
+
+  if (dist <= 1 && u.ap >= 1 && Math.random() > 0.25) {
+    aiDoAttack(u, target, b);
+  } else if (u.ap >= 1) {
+    // 30% chance wander randomly instead of chasing
+    if (Math.random() < 0.3) {
+      const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+      const [dr,dc] = dirs[Math.floor(Math.random()*4)];
+      const nr = u.row+dr, nc = u.col+dc;
+      const inBounds = nr>=0&&nr<8&&nc>=0&&nc<8;
+      const blocked = inBounds && (b.cpuUnits.some(e=>e!==u&&e.row===nr&&e.col===nc)||b.playerUnits.some(p=>p.row===nr&&p.col===nc));
+      if (inBounds && !blocked) {
+        const prev = getCell(u.row, u.col);
+        u.row=nr; u.col=nc; u.ap--;
+        if (prev) vfxWarpSpawn(prev, FACTIONS[u.unit.faction].color+'60');
+        addTimelineEntry('enemy', `${u.unit.name} wanders`, 'move');
+      }
+    } else {
+      aiMoveToward(u, target.row, target.col, b);
+    }
+  }
+}
+
+// ── NORMAL AI ─────────────────────────────────────────────────────────────
+// Targets weakest player, moves efficiently, occasionally uses 1 ability per turn
+function aiActNormal(u, b) {
+  const hpPct = u.hp / u.maxHp;
+
+  // Retreat if critically low HP (< 20%) and there are other CPU allies
+  if (hpPct < 0.2 && b.cpuUnits.length > 1) {
+    const nearest = b.playerUnits.reduce((best, p) => aiDist(u,p) < aiDist(u,best) ? p : best, b.playerUnits[0]);
+    aiMoveAway(u, nearest.row, nearest.col, b);
+    return;
+  }
+
+  // Pick target: lowest HP among reachable enemies first, else nearest
+  const sorted = [...b.playerUnits].sort((a,b) => a.hp - b.hp);
+  const target = sorted[0];
+  const dist = aiDist(u, target);
+
+  // Try ability first (~30% chance) if enemy is in range
+  if (u.ap >= 1 && Math.random() < 0.3) {
+    if (aiEvaluateAbilities(u, b, 'NORMAL')) return;
+  }
+
+  if (dist <= 1 && u.ap >= 1) {
+    aiDoAttack(u, target, b);
+    // Second AP: attack again if still alive and adjacent
+    if (u.ap >= 1 && b.playerUnits.includes(target) && target.hp > 0 && aiDist(u,target) <= 1) {
+      aiDoAttack(u, target, b);
+    }
+  } else if (u.ap >= 1) {
+    aiMoveToward(u, target.row, target.col, b);
+    // After moving, attack if now adjacent
+    if (u.ap >= 1 && aiDist(u, target) <= 1) {
+      aiDoAttack(u, target, b);
+    }
+  }
+}
+
+// ── HARD AI ───────────────────────────────────────────────────────────────
+// Full evaluation: focus-fire, flanking, ability usage, coordination, kiting
+function aiActHard(u, b) {
+  const diff = gameState.options.diff;
+  const hpPct = u.hp / u.maxHp;
+  const color = FACTIONS[u.unit.faction].color;
+
+  // ── Step 1: retreat if below 25% HP and not the last unit ──────────────
+  if (hpPct < 0.25 && b.cpuUnits.length > 1 && u.ap >= 1) {
+    const nearest = b.playerUnits.reduce((best, p) => aiDist(u,p) < aiDist(u,best) ? p : best, b.playerUnits[0]);
+    aiMoveAway(u, nearest.row, nearest.col, b);
+    // Still try to fire back if an enemy is adjacent after retreating
+    if (u.ap >= 1) {
+      const adj = b.playerUnits.find(p => aiDist(u, p) <= 1);
+      if (adj) aiDoAttack(u, adj, b);
+    }
+    return;
+  }
+
+  // ── Step 2: score every player unit as a target ─────────────────────────
+  // Priority: units that can be killed this turn > lowest HP > units that attacked us > nearest
+  function targetScore(t) {
+    const dist = aiDist(u, t);
+    const dmg = aiCalcDamage(u, t);
+    const abilDmg = aiCalcAbilDamage(u, t);
+    const canKillBasic = dist <= 1 && t.hp - dmg * u.ap <= 0;
+    const canKillAbil  = (u.unit.abilities||[]).some(ab => ab.range >= dist && aiCalcAbilDamage(u,t) >= t.hp);
+    const hpRatio = 1 - (t.hp / t.maxHp);
+    return (canKillBasic||canKillAbil ? 500 : 0) + hpRatio * 100 + (50 / (dist + 1));
+  }
+  const target = b.playerUnits.reduce((best, p) => targetScore(p) > targetScore(best) ? p : best, b.playerUnits[0]);
+  const dist = aiDist(u, target);
+
+  // ── Step 3: try full ability evaluation (kill-shots first via scoring) ──
+  if (u.ap >= 1) {
+    if (aiEvaluateAbilities(u, b, diff)) return;
+  }
+
+  // ── Step 4: if in attack range, basic attack (use all AP) ───────────────
+  if (dist <= 1 && u.ap >= 1) {
+    aiDoAttack(u, target, b);
+    if (u.ap >= 1 && b.playerUnits.includes(target) && target.hp > 0 && aiDist(u,target)<=1) {
+      aiDoAttack(u, target, b);
+    } else if (u.ap >= 1) {
+      // Use remaining AP on ability vs adjacent target
+      aiEvaluateAbilities(u, b, diff);
+    }
+    return;
+  }
+
+  // ── Step 5: move toward target with flanking preference ─────────────────
+  if (u.ap >= 1) {
+    // Flanking: try to approach from a direction no other CPU unit is approaching from
+    const otherCpuApproach = b.cpuUnits
+      .filter(e => e !== u)
+      .map(e => { const dx = target.col-e.col, dy = target.row-e.row; return dx > 0 ? 'R' : dx < 0 ? 'L' : dy > 0 ? 'D' : 'U'; });
+
+    const mov = u.unit.stats.mov;
+    let bestRow=u.row, bestCol=u.col, bestScore=-Infinity;
+    for (let dr=-mov; dr<=mov; dr++) {
+      for (let dc=-mov; dc<=mov; dc++) {
+        if (Math.abs(dr)+Math.abs(dc) > mov) continue;
+        const nr=u.row+dr, nc=u.col+dc;
+        if (nr<0||nr>=8||nc<0||nc>=8) continue;
+        const blocked = b.cpuUnits.some(e=>e!==u&&e.row===nr&&e.col===nc)||b.playerUnits.some(p=>p.row===nr&&p.col===nc);
+        if (blocked) continue;
+        const dToTarget = aiDist({row:nr,col:nc}, target);
+        // Prefer tiles that are adjacent to target but not already covered
+        const approachDir = target.col-nc > 0 ? 'R' : target.col-nc < 0 ? 'L' : target.row-nc > 0 ? 'D' : 'U';
+        const flankBonus = otherCpuApproach.includes(approachDir) ? -5 : 5;
+        // Score: closeness to target + flank bonus + small random to break ties
+        const score = (8 - dToTarget) * 10 + flankBonus + Math.random();
+        if (score > bestScore) { bestScore = score; bestRow=nr; bestCol=nc; }
+      }
+    }
+    if (bestRow !== u.row || bestCol !== u.col) {
+      const prev = getCell(u.row, u.col);
+      u.row=bestRow; u.col=bestCol; u.ap--;
+      if (prev) vfxWarpSpawn(prev, color+'80');
+      addTimelineEntry('enemy', `${u.unit.name} flanks`, 'move');
+    }
+
+    // After moving, attack if now adjacent or use ability if in range
+    if (u.ap >= 1) {
+      if (aiDist(u, target) <= 1) {
+        aiDoAttack(u, target, b);
+      } else {
+        aiEvaluateAbilities(u, b, diff);
+      }
+    }
+  }
+}
+
 
 function checkVictory() {
   const b = gameState.battle;
@@ -2860,12 +3427,376 @@ function toggleOption(key) {
   btn.textContent = gameState.options[key]?'ON':'OFF';
   btn.className = 'toggle-btn'+(gameState.options[key]?' on':'');
 }
-const difficulties = ['EASY','NORMAL','HARD'];
+const difficulties = ['EASY','NORMAL','HARD','BRUTAL'];
 function cycleDifficulty() {
   const idx = difficulties.indexOf(gameState.options.diff);
   gameState.options.diff = difficulties[(idx+1)%difficulties.length];
   document.getElementById('opt-diff').textContent = gameState.options.diff;
 }
+// ============================================================
+// ONLINE MODE — WebSocket Client
+// ============================================================
+// Replace this URL with your Cloudflare Worker WebSocket URL:
+const WS_URL = 'wss://YOUR_WORKER.YOUR_SUBDOMAIN.workers.dev/ws';
+
+let ws        = null;   // active WebSocket
+let onlineCtx = null;   // { role:'host'|'guest', roomId, myId, opponentId, pin? }
+
+// ─────────────────────────────────────────────────────────────────────────
+// Entry point — called from the Online menu button
+// ─────────────────────────────────────────────────────────────────────────
+function enterOnlineMode() {
+  if (gameState.army.units.length < 4) {
+    showToast('Set up at least 4 active units in Manage Army first', 3500);
+    return;
+  }
+  showScreen('lobby-screen');
+  showLobbyModeSelect();
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Lobby panel helpers
+// ─────────────────────────────────────────────────────────────────────────
+function showLobbyModeSelect() {
+  document.getElementById('lobby-mode-select').style.display   = 'flex';
+  document.getElementById('lobby-waiting-panel').style.display = 'none';
+  document.getElementById('lobby-join-panel').style.display    = 'none';
+  setLobbyStatus('');
+}
+
+function showLobbyWaiting(text, showPin, pin) {
+  document.getElementById('lobby-mode-select').style.display   = 'none';
+  document.getElementById('lobby-join-panel').style.display    = 'none';
+  document.getElementById('lobby-waiting-panel').style.display = 'flex';
+  document.getElementById('lobby-wait-text').textContent       = text;
+  const pinBlock = document.getElementById('lobby-pin-display');
+  pinBlock.style.display = showPin ? 'block' : 'none';
+  if (showPin && pin) document.getElementById('lobby-pin-value').textContent = pin;
+}
+
+function showJoinPrivate() {
+  document.getElementById('lobby-mode-select').style.display   = 'none';
+  document.getElementById('lobby-waiting-panel').style.display = 'none';
+  document.getElementById('lobby-join-panel').style.display    = 'flex';
+  document.getElementById('join-error-msg').textContent        = '';
+  document.getElementById('pin-input').value                   = '';
+}
+
+function setLobbyStatus(msg) {
+  document.getElementById('lobby-status-msg').textContent = msg;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// WebSocket lifecycle
+// ─────────────────────────────────────────────────────────────────────────
+function openWS(onOpen) {
+  if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+    if (ws.readyState === WebSocket.OPEN) onOpen();
+    else ws.addEventListener('open', onOpen, { once: true });
+    return;
+  }
+  ws = new WebSocket(WS_URL);
+  ws.addEventListener('open', () => {
+    console.log('[WS] connected');
+    onOpen();
+  });
+  ws.addEventListener('message', e => handleWsMessage(JSON.parse(e.data)));
+  ws.addEventListener('close',   () => { console.log('[WS] closed'); ws = null; });
+  ws.addEventListener('error',   () => {
+    showToast('Connection error — check your network', 3000);
+    showLobbyModeSelect();
+  });
+}
+
+function wsSend(msg) {
+  if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(msg));
+}
+
+function closeWS() {
+  if (ws) { ws.close(); ws = null; }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Matchmaking actions
+// ─────────────────────────────────────────────────────────────────────────
+function startCasualMatch() {
+  showLobbyWaiting('SEARCHING FOR OPPONENT', false);
+  openWS(() => {
+    wsSend({ type: 'casual_queue', army: serializeArmy() });
+  });
+}
+
+function hostPrivateMatch() {
+  showLobbyWaiting('GENERATING PIN…', false);
+  openWS(() => {
+    wsSend({ type: 'host_private', army: serializeArmy() });
+  });
+}
+
+function joinPrivateMatch() {
+  const pin = document.getElementById('pin-input').value.trim().toUpperCase();
+  if (pin.length !== 4) {
+    document.getElementById('join-error-msg').textContent = 'PIN must be 4 characters';
+    return;
+  }
+  document.getElementById('join-error-msg').textContent = '';
+  showLobbyWaiting('CONNECTING TO HOST…', false);
+  openWS(() => {
+    wsSend({ type: 'join_private', pin, army: serializeArmy() });
+  });
+}
+
+function cancelMatchmaking() {
+  wsSend({ type: 'cancel' });
+  closeWS();
+  showLobbyModeSelect();
+  onlineCtx = null;
+}
+
+function leaveLobby() {
+  cancelMatchmaking();
+  showScreen('main-menu');
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Incoming message router
+// ─────────────────────────────────────────────────────────────────────────
+function handleWsMessage(msg) {
+  console.log('[WS] ←', msg.type, msg);
+  switch (msg.type) {
+
+    case 'pin_assigned':
+      // Server generated a PIN for our hosted room
+      showLobbyWaiting('WAITING FOR OPPONENT', true, msg.pin);
+      onlineCtx = { role: 'host', roomId: msg.roomId, myId: msg.playerId, pin: msg.pin };
+      break;
+
+    case 'match_found':
+      // Both sides receive this when a match is paired
+      onlineCtx = {
+        role:       msg.role,          // 'host' or 'guest'
+        roomId:     msg.roomId,
+        myId:       msg.playerId,
+        opponentId: msg.opponentId,
+      };
+      showLobbyWaiting('OPPONENT FOUND — DEPLOYING…', false);
+      setTimeout(() => startOnlineBattle(msg.opponentArmy, msg.role === 'host'), 800);
+      break;
+
+    case 'join_error':
+      document.getElementById('join-error-msg').textContent = msg.reason || 'PIN not found';
+      showJoinPrivate();
+      break;
+
+    case 'opponent_action':
+      // Opponent made a game action — apply it locally
+      applyOnlineAction(msg.action);
+      break;
+
+    case 'opponent_disconnected':
+      showToast('Opponent disconnected — you win!', 4000);
+      setTimeout(() => showVictory(true), 1200);
+      break;
+
+    case 'error':
+      showToast(msg.reason || 'Server error', 3000);
+      showLobbyModeSelect();
+      break;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Serialize our army to send to opponent / server
+// ─────────────────────────────────────────────────────────────────────────
+function serializeArmy() {
+  return {
+    units:       gameState.army.units.map(u => u.id),
+    reserves:    gameState.army.reserveUnits.map(u => u.id),
+    eqCard:      gameState.army.eqCard?.id  || null,
+    domainCard:  gameState.army.domainCard?.id || null,
+  };
+}
+
+function deserializeArmy(data) {
+  return {
+    units:       (data.units    || []).map(id => ALL_UNITS.find(u => u.id === id)).filter(Boolean),
+    reserves:    (data.reserves || []).map(id => ALL_UNITS.find(u => u.id === id)).filter(Boolean),
+    eqCard:      EQUIPMENT_CARDS.find(c => c.id === data.eqCard)   || null,
+    domainCard:  DOMAIN_CARDS.find(c => c.id === data.domainCard)  || null,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Start the online battle
+// ─────────────────────────────────────────────────────────────────────────
+function startOnlineBattle(opponentArmyData, isHost) {
+  const oppArmy = deserializeArmy(opponentArmyData);
+
+  // Auto-deploy our units on our side (rows 5-7 for host, rows 0-2 for guest)
+  const ourRows   = isHost ? [5, 6, 7] : [0, 1, 2];
+  const theirRows = isHost ? [0, 1, 2] : [5, 6, 7];
+
+  const defaultPositions = [[0,1],[0,5],[1,2],[1,6]];
+
+  const myUnits = gameState.army.units.slice(0, 4).map((unit, i) => ({
+    unit,
+    row: ourRows[Math.floor(i / 2)],
+    col: defaultPositions[i][1],
+    hp: unit.stats.hp, maxHp: unit.stats.hp, ap: 2, statusEffects: [],
+  }));
+
+  const oppUnits = oppArmy.units.slice(0, 4).map((unit, i) => ({
+    unit,
+    row: theirRows[Math.floor(i / 2)],
+    col: defaultPositions[i][1],
+    hp: unit.stats.hp, maxHp: unit.stats.hp, ap: 2, statusEffects: [],
+  }));
+
+  // Host goes first
+  const myPhase = isHost ? 'player' : 'waiting';
+
+  gameState.battle = {
+    playerUnits:     myUnits,
+    cpuUnits:        oppUnits,   // reuse cpuUnits slot for opponent
+    playerReserves:  gameState.army.reserveUnits,
+    cpuReserves:     oppArmy.reserves,
+    playerTimeline: [], enemyTimeline: [],
+    turn: 1,
+    phase: isHost ? 'player' : 'opponent',  // host acts first
+    selectedUnit: null, actionMode: null,
+    playerCasualties: 0, cpuCasualties: 0,
+    tileEffects: [],
+    playerEq:   gameState.army.eqCard,
+    playerDomain: gameState.army.domainCard,
+    cpuEq:      oppArmy.eqCard,
+    cpuDomain:  oppArmy.domainCard,
+    online: true,   // flag — disables CPU AI, enables WS action sync
+    isHost,
+  };
+
+  showScreen('battle-screen');
+  initBattle();
+
+  if (!isHost) {
+    // Guest waits — lock the UI until opponent (host) acts
+    setOnlineWaitingState(true);
+    showToast('Opponent\'s turn — waiting…', 3000);
+  } else {
+    showToast('You go first!', 2000);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Online action dispatch — called instead of CPU AI when in online mode
+// ─────────────────────────────────────────────────────────────────────────
+
+// Lock/unlock player input during opponent's turn
+function setOnlineWaitingState(waiting) {
+  const b = gameState.battle;
+  if (!b) return;
+  b.phase = waiting ? 'opponent' : 'player';
+  const banner = document.getElementById('turn-banner');
+  if (waiting) {
+    banner.innerHTML = `Opponent's Turn <span id="turn-num">Turn ${b.turn}</span>`;
+    banner.className = 'turn-banner enemy-turn';
+  } else {
+    const diffLabel = gameState.options.diff || 'NORMAL';
+    const diffColors = { EASY:'#50ff80', NORMAL:'#00e5ff', HARD:'#ff9944', BRUTAL:'#ff3344' };
+    banner.innerHTML = `Your Turn <span id="turn-num">Turn ${b.turn}</span>`;
+    banner.className = 'turn-banner';
+  }
+  renderBattleInfo();
+}
+
+// Broadcast an action to the opponent via the server
+function broadcastOnlineAction(action) {
+  if (!onlineCtx) return;
+  wsSend({ type: 'action', roomId: onlineCtx.roomId, playerId: onlineCtx.myId, action });
+}
+
+// Apply an action received from the opponent
+function applyOnlineAction(action) {
+  const b = gameState.battle;
+  if (!b || !b.online) return;
+
+  switch (action.type) {
+    case 'move': {
+      const unit = b.cpuUnits.find(u => u.unit.id === action.unitId);
+      if (!unit) return;
+      const fromCell = getCell(unit.row, unit.col);
+      unit.row = action.toRow; unit.col = action.toCol;
+      if (fromCell) vfxWarpSpawn(fromCell, FACTIONS[unit.unit.faction].color + '80');
+      addTimelineEntry('enemy', `${unit.unit.name} moved`, 'move');
+      placeAllTokens(); updateFogOfWar();
+      break;
+    }
+    case 'attack': {
+      const attacker = b.cpuUnits.find(u => u.unit.id === action.unitId);
+      const defender = b.playerUnits.find(u => u.unit.id === action.targetId);
+      if (!attacker || !defender) return;
+      defender.hp -= action.dmg;
+      const tc = getCell(defender.row, defender.col);
+      const uc = getCell(attacker.row, attacker.col);
+      const color = FACTIONS[attacker.unit.faction].color;
+      if (tc && uc) {
+        vfxAttack(uc, tc, color);
+        setTimeout(() => { flashCell(tc, color+'88'); shakeToken(tc); spawnFloater(tc, `-${action.dmg}`, color); }, 280);
+      }
+      addTimelineEntry('enemy', `${attacker.unit.name} → ${defender.unit.name}: -${action.dmg}`, 'attack');
+      if (defender.hp <= 0) setTimeout(() => handlePlayerDeath(defender), 340);
+      else { placeAllTokens(); updateFogOfWar(); }
+      break;
+    }
+    case 'ability': {
+      const attacker = b.cpuUnits.find(u => u.unit.id === action.unitId);
+      if (!attacker) return;
+      const color = FACTIONS[attacker.unit.faction].color;
+      if (action.targetId) {
+        const defender = b.playerUnits.find(u => u.unit.id === action.targetId);
+        if (defender) {
+          defender.hp -= action.dmg;
+          const tc = getCell(defender.row, defender.col), uc = getCell(attacker.row, attacker.col);
+          if (tc && uc) { vfxAbility(uc, tc, color, action.abilityName); setTimeout(()=>{ flashCell(tc,color+'88'); shakeToken(tc); spawnFloater(tc,`-${action.dmg}`,color); },260); }
+          addTimelineEntry('enemy', `${attacker.unit.name}: ${action.abilityName}`, 'ability');
+          if (defender.hp <= 0) setTimeout(() => handlePlayerDeath(defender), 340);
+        }
+      } else if (action.tileR !== undefined) {
+        const tc = getCell(action.tileR, action.tileC), uc = getCell(attacker.row, attacker.col);
+        if (tc && uc) { vfxAbility(uc, tc, color, action.abilityName); flashCell(tc, color+'55'); }
+        placeTileEffect(action.tileR, action.tileC, action.abilityName, attacker.unit.faction);
+        addTimelineEntry('enemy', `${attacker.unit.name}: ${action.abilityName}`, 'ability');
+        placeAllTokens(); updateFogOfWar();
+      }
+      break;
+    }
+    case 'end_turn': {
+      b.turn++;
+      tickTileEffects();
+      placeAllTokens(); updateFogOfWar();
+      setOnlineWaitingState(false);
+      showToast('Your turn!', 1500);
+      break;
+    }
+  }
+}
+
+// Patch endPlayerTurn to broadcast when online
+const _origEndPlayerTurn = endPlayerTurn;
+function endPlayerTurn() {
+  const b = gameState.battle;
+  if (b?.online) {
+    broadcastOnlineAction({ type: 'end_turn' });
+    b.turn++;
+    tickTileEffects();
+    clearSelection();
+    setOnlineWaitingState(true);
+    placeAllTokens(); updateFogOfWar();
+    showToast("Opponent's turn…", 2000);
+    return;
+  }
+  _origEndPlayerTurn();
+}
+
 </script>
 </body>
 </html>
