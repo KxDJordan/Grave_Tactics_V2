@@ -2511,7 +2511,7 @@ function cycleDifficulty() {
 // ONLINE MODE — WebSocket Client
 // ============================================================
 // Replace this URL with your Cloudflare Worker WebSocket URL:
-const WS_URL = 'nexus-break-matchmaker.kevv-djordan.workers.dev';
+const WS_URL = 'https://nexus-break-matchmaker.kevv-djordan.workers.dev/ws';
 
 let ws        = null;   // active WebSocket
 let onlineCtx = null;   // { role:'host'|'guest', roomId, myId, opponentId, pin? }
